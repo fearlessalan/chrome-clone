@@ -11,11 +11,13 @@ import {
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { TimedAccordion } from './timed-accordion/timed-accordion';
+import { KeyframeAnimation } from './keyframe-animation/keyframe-animation';
 
 @Component({
   selector: 'app-yours',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TimedAccordion, KeyframeAnimation],
   templateUrl: './yours.html',
   styleUrls: ['./yours.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -9,10 +9,15 @@
 }
 
 // Styles généraux (inchangés)
-.yours-section { padding: 6rem 0; text-align: center; }
+.yours-section {
+  padding: 6rem 0;
+  text-align: center;
+}
 .yours-title {
-  font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800;
-  color: var(--text-color-base); margin-bottom: 3rem;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--text-color-base);
+  margin-bottom: 3rem;
   transform: translateY(var(--title-translate-y));
   opacity: var(--title-opacity);
 }
@@ -59,23 +64,41 @@
 }
 
 // --- Styles pour l'animation "Take Over" ---
-.take-over-container { height: 300vh; position: relative; margin-top: 5rem; }
-.take-over-sticky-content { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.take-over-container {
+  height: 300vh;
+  position: relative;
+  margin-top: 5rem;
+}
+.take-over-sticky-content {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
 .animation-wrapper {
-  width: 100%; height: 100%;
-  display: flex; justify-content: center; align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .animation-mask {
   position: relative;
-  width: 60vw; max-width: 400px; aspect-ratio: 4 / 3;
+  width: 60vw;
+  max-width: 400px;
+  aspect-ratio: 4 / 3;
   transform: scale(var(--mask-scale));
   border-radius: var(--mask-radius);
   overflow: hidden;
 }
 
 .take-over-image {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 // L'astuce est là : on révèle les images par le haut en animant la première valeur de `inset`.
@@ -84,4 +107,12 @@
 }
 .second-capture {
   clip-path: inset(var(--second-image-clip) 0 0 0);
+}
+.timed-accordion-block {
+  // On ajoute un bon espace au-dessus pour séparer les deux expériences
+  margin-top: 8rem;
+}
+
+.keyframe-animation-block {
+  margin-top: 8rem; // Pour l'espacement
 }

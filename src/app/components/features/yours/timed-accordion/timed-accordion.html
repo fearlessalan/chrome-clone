@@ -1,0 +1,89 @@
+<p>timed-accordion works!</p>
+<div
+  class="accordion-container"
+  (mouseenter)="isPaused.set(true)"
+  (mouseleave)="isPaused.set(false)"
+>
+  <!-- Colonne de gauche : les visuels (placeholders) -->
+  <div class="visual-panels">
+    <div *ngFor="let item of items()" class="panel" [class.is-active]="item.id === activeId()">
+      <!-- On affiche un placeholder différent pour chaque slide -->
+      <svg
+        *ngIf="item.id === 'customize'"
+        viewBox="0 0 400 300"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <rect width="400" height="300" rx="14" fill="#fefce8" />
+        <text
+          x="50%"
+          y="50%"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          font-family="Roboto, sans-serif"
+          font-size="24"
+          fill="#ca8a04"
+        >
+          Customize UI
+        </text>
+      </svg>
+      <svg *ngIf="item.id === 'devices'" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="300" rx="14" fill="#f0f9ff" />
+        <text
+          x="50%"
+          y="50%"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          font-family="Roboto, sans-serif"
+          font-size="24"
+          fill="#0284c7"
+        >
+          Devices UI
+        </text>
+      </svg>
+      <svg
+        *ngIf="item.id === 'autofill'"
+        viewBox="0 0 400 300"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <rect width="400" height="300" rx="14" fill="#f0fdf4" />
+        <text
+          x="50%"
+          y="50%"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          font-family="Roboto, sans-serif"
+          font-size="24"
+          fill="#16a34a"
+        >
+          Autofill UI
+        </text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Colonne de droite : le contenu textuel (l'accordéon) -->
+  <div class="text-items">
+    <div
+      *ngFor="let item of items(); let i = index"
+      class="item"
+      [class.is-active]="i === activeIndex()"
+      (click)="selectItem(i)"
+      role="button"
+      tabindex="0"
+    >
+      <div class="item-header">
+        <h3 class="item-title">{{ item.title }}</h3>
+        <div class="item-progress-bar">
+          <div class="item-progress-fill" [style.--duration.ms]="isPaused() ? 0 : 7000"></div>
+        </div>
+      </div>
+      <div class="item-content">
+        <p>{{ item.description }}</p>
+        <a *ngIf="item.cta" href="#" class="item-cta">{{ item.cta }}</a>
+      </div>
+    </div>
+
+    <!-- Le CTA final en bas -->
+    <a href="#" class="final-cta"> Pour commencer, veuillez vous connecter </a>
+  </div>
+</div>
