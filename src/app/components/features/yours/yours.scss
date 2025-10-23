@@ -1,26 +1,18 @@
-// On définit l'état initial de nos variables d'animation au niveau du composant.
-// GSAP va prendre le contrôle de ces variables pour créer l'animation.
 :host {
+  // On définit les variables CSS qui seront pilotées par GSAP
   --mask-scale: 1;
   --mask-radius: 16px;
   --title-translate-y: 0px;
   --title-opacity: 1;
-  --first-image-clip: 100%; // 100% = complètement caché (coupé par le bas)
-  --second-image-clip: 100%; // 100% = complètement caché
+  --first-image-clip: 100%; // 100% = complètement caché par le haut
+  --second-image-clip: 100%; // 100% = complètement caché par le haut
 }
 
-// --- Styles généraux de la section ---
-.yours-section {
-  padding: 6rem 0;
-  text-align: center;
-}
-
+// Styles généraux (inchangés)
+.yours-section { padding: 6rem 0; text-align: center; }
 .yours-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  color: var(--text-color-base);
-  margin-bottom: 3rem;
-  // On lie le transform et l'opacité aux variables CSS
+  font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800;
+  color: var(--text-color-base); margin-bottom: 3rem;
   transform: translateY(var(--title-translate-y));
   opacity: var(--title-opacity);
 }
@@ -67,55 +59,29 @@
 }
 
 // --- Styles pour l'animation "Take Over" ---
-.take-over-container {
-  // La hauteur de ce conteneur définit la "longueur" du scroll de l'animation.
-  // 300vh = l'utilisateur devra scroller 3x la hauteur de l'écran pour la voir en entier.
-  height: 300vh;
-  position: relative;
-  margin-top: 5rem;
-}
-
-.take-over-sticky-content {
-  // Cet élément va se "coller" en haut de la page pendant que son parent défile.
-  position: sticky;
-  top: 0;
-  height: 100vh; // Il prend toute la hauteur de l'écran.
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+.take-over-container { height: 300vh; position: relative; margin-top: 5rem; }
+.take-over-sticky-content { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 .animation-wrapper {
-  // Le scale est piloté par la variable CSS --mask-scale animée par GSAP.
-  transform: scale(var(--mask-scale));
+  width: 100%; height: 100%;
+  display: flex; justify-content: center; align-items: center;
 }
 
 .animation-mask {
   position: relative;
-  width: 60vw;
-  max-width: 400px;
-  aspect-ratio: 4 / 3;
-  // Le border-radius est aussi piloté par une variable CSS animée par GSAP.
+  width: 60vw; max-width: 400px; aspect-ratio: 4 / 3;
+  transform: scale(var(--mask-scale));
   border-radius: var(--mask-radius);
-  overflow: hidden; // C'est ça qui fait l'effet de "masque" et qui cache ce qui dépasse.
+  overflow: hidden;
 }
 
 .take-over-image {
-  // Les 3 SVGs sont empilés les uns sur les autres.
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
 }
 
-// On utilise clip-path pour révéler les images du bas vers le haut.
-// Ces variables sont pilotées par GSAP, passant de 100% (caché) à 0% (visible).
+// L'astuce est là : on révèle les images par le haut en animant la première valeur de `inset`.
 .first-capture {
   clip-path: inset(var(--first-image-clip) 0 0 0);
 }
-
 .second-capture {
   clip-path: inset(var(--second-image-clip) 0 0 0);
 }

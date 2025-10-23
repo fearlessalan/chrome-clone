@@ -36,29 +36,15 @@ export class Yours implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
-      // On attend un cycle de rendu pour être sûr que tout le DOM est en place
       setTimeout(() => {
         this.ctx = gsap.context(() => {
           const scroller = this.elementRef.nativeElement.closest('.main-scroll-container');
-
-          if (!scroller) {
-            // Si on ne trouve pas le scroller, on arrête et on crie.
-            console.error(
-              "ERREUR CRITIQUE : Le conteneur de scroll '.main-scroll-container' est INTROUVABLE. Les animations de la section 'Yours' ne peuvent pas démarrer."
-            );
-            return;
-          }
-
-          // Si on arrive ici, c'est que le scroller est trouvé. Bonne nouvelle.
-          console.log("Scroller trouvé pour la section 'Yours'", scroller);
-
+          if (!scroller) return;
           this.initPillAnimation(scroller);
           this.initTakeOverAnimation(scroller);
-
-          // On force un refresh de ScrollTrigger au cas où les dimensions n'étaient pas prêtes.
           ScrollTrigger.refresh();
         }, this.sectionRef.nativeElement);
-      }, 100); // On met un petit délai de 100ms pour être large.
+      }, 100);
     });
   }
 
@@ -73,7 +59,6 @@ export class Yours implements AfterViewInit, OnDestroy {
       scroller: scroller,
       start: 'top 80%',
       once: true,
-      // markers: true, // Décommente pour débugger la pilule si besoin
       onEnter: () => pill.classList.add('is-animated'),
     });
   }
@@ -82,30 +67,53 @@ export class Yours implements AfterViewInit, OnDestroy {
     const stickyContainer = this.stickyContainerRef.nativeElement;
     const animationWrapper = this.animationWrapperRef.nativeElement;
 
-    console.log("Initialisation de l'animation TakeOver. Trigger:", stickyContainer);
-
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: stickyContainer,
         scroller: scroller,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1, // Mettre 1 ou un chiffre est souvent plus smooth que 'true'
+        scrub: 1,
       },
     });
 
-    tl.to(animationWrapper, { '--mask-scale': 12, duration: 0.3 }).to(
+    // SÉQUENCE 1 (0% -> 30% du scroll) : Zoom du masque pour remplir l'écran.
+    tl.to(animationWrapper, {
+      '--mask-scale': 4,
+      '--mask-radius': 0,
+      duration: 0.3, // Correspond à 30% de la timeline
+    });
+
+    // Le titre disparaît pendant le zoom.
+    tl.to(
       animationWrapper,
-      { '--mask-radius': 0, duration: 0.3 },
-      '<'
-    );
-    tl.to(animationWrapper, { '--title-translate-y': '50px', duration: 0.3 }, 0).to(
-      animationWrapper,
-      { '--title-opacity': 0, duration: 0.2 },
+      {
+        '--title-translate-y': '-50px',
+        '--title-opacity': 0,
+        duration: 0.2,
+      },
       0.1
-    );
-    tl.to(animationWrapper, { '--first-image-clip': 0, duration: 0.35 }, 0.3);
-    tl.to(animationWrapper, { '--second-image-clip': 0, duration: 0.35 }, 0.65);
+    ); // Positionné à 10% de la timeline
+
+    // SÉQUENCE 2 (30% -> 65% du scroll) : Révélation verticale de la première capture.
+    tl.to(
+      animationWrapper,
+      {
+        '--first-image-clip': 0,
+        duration: 0.35, // Durée de 35% (65% - 30%)
+      },
+      0.3
+    ); // Commence à 30% de la timeline
+
+    // SÉQUENCE 3 (65% -> 100% du scroll) : Révélation verticale de la deuxième capture.
+    tl.to(
+      animationWrapper,
+      {
+        '--second-image-clip': 0,
+        duration: 0.35, // Durée de 35% (100% - 65%)
+      },
+      0.65
+    ); // Commence à 65% de la timeline
   }
 
   readonly pillText = 'Personnalisez-le'.split('');
