@@ -1,0 +1,48 @@
+:root {
+  --primary: #1a73e8;
+  --on-primary: #fff;
+  --bg: #fff;
+  --surface: #f7f9fb;
+  --muted: #6b7280;
+  --radius: 12px;
+  --container: 1120px;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+app-root {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, 'Roboto', Arial, sans-serif;
+}
+.chr-header {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.drawer-footer .btn-download {
+  position: absolute;
+  bottom: 16px;
+  width: calc(100% - 32px);
+}
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.animate-enter {
+  transform: translateY(12px);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: transform 420ms cubic-bezier(0.22, 0.9, 0.28, 1), opacity 360ms;
+}
+.animate-enter.visible {
+  transform: translateY(0);
+  opacity: 1;
+}

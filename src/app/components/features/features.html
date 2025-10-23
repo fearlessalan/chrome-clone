@@ -1,1 +1,87 @@
-<p>features works!</p>
+<div class="features-root container" #root>
+  <!-- lateral jumplinks (desktop) -->
+  <aside class="chr-jumplinks-v2" aria-label="Navigation des sections">
+    <ul class="chr-jumplinks-v2__list shadow-elevation-2" role="navigation">
+      <li class="chr-jumplinks-v2__list-item">
+        <a
+          href="#updates"
+          class="chr-link chr-link--jumplink"
+          [class.chr-link--active]="isActive('updates')"
+        >
+          <span class="chr-link__label">Mises à jour</span>
+        </a>
+      </li>
+
+      <li class="chr-jumplinks-v2__list-item">
+        <a
+          href="#yours"
+          class="chr-link chr-link--jumplink"
+          [class.chr-link--active]="isActive('yours')"
+        >
+          <span class="chr-link__label">À vous</span>
+        </a>
+      </li>
+
+      <li class="chr-jumplinks-v2__list-item">
+        <a
+          href="#safe"
+          class="chr-link chr-link--jumplink"
+          [class.chr-link--active]="isActive('safe')"
+        >
+          <span class="chr-link__label">Sécurisé</span>
+        </a>
+      </li>
+
+      <li class="chr-jumplinks-v2__list-item">
+        <a
+          href="#fast"
+          class="chr-link chr-link--jumplink"
+          [class.chr-link--active]="isActive('fast')"
+        >
+          <span class="chr-link__label">Rapide</span>
+        </a>
+      </li>
+
+      <li class="chr-jumplinks-v2__list-item">
+        <a
+          href="#by-google"
+          class="chr-link chr-link--jumplink"
+          [class.chr-link--active]="isActive('by-google')"
+        >
+          <span class="chr-link__label">Par Google</span>
+        </a>
+      </li>
+
+      <li class="chr-jumplinks-v2__list-item">
+        <button
+          type="button"
+          id="js-download-header-jumplink"
+          class="chr-download-button chr-download-button--jumplink"
+        >
+          Télécharger
+          <svg
+            class="chr-button__icon chr-download-button__icon"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M5 20h14v-2H5v2zm7-18v10l4-4 1.4 1.4L12 17l-5.4-5.6L7 8l4 4V2h2z"
+            ></path>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- content column -->
+  <div class="features-content">
+    <app-updates></app-updates>
+    <app-yours></app-yours>
+    <app-safe></app-safe>
+    <app-fast></app-fast>
+    <app-by-google></app-by-google>
+  </div>
+</div>

@@ -1,0 +1,129 @@
+/* Header bar */
+.chr-header-v3__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: var(--header-height);
+  padding: 0 12px;
+  background: var(--bg);
+}
+
+/* left cluster (burger + logo) */
+.chr-header-v3__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* burger button */
+.chr-header-v3__hamburger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* logo link */
+.chr-header-v3__logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* nav desktop */
+.chr-header-v3__nav {
+  display: flex;
+  align-items: center;
+  margin-left: 18px;
+}
+.chr-header-v3__nav-list {
+  display: flex;
+  gap: 18px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+.chr-header-v3__nav-li-link {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.chr-header-v3__nav-li-link:hover,
+.chr-header-v3__nav-li-link:focus {
+  color: #0f1720;
+  background: rgba(26, 115, 232, 0.04);
+}
+
+/* actions area (desktop Download) */
+.chr-header-v3__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Drawer header inside sidenav */
+.app-drawer .drawer-header {
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(15, 23, 32, 0.04);
+}
+.app-drawer .drawer-header .logo-title {
+  display: flex;
+  flex-direction: column;
+}
+.app-drawer .drawer-header .logo-title .title {
+  font-weight: 800;
+  color: #111827;
+  font-size: 1rem;
+}
+.app-drawer .drawer-header .logo-title .subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Drawer links list (mat-nav-list / anchor fallback) */
+.app-drawer mat-nav-list,
+.app-drawer .drawer-links {
+  padding: 12px 8px;
+}
+.app-drawer mat-list-item,
+.app-drawer .drawer-links a {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  text-decoration: none;
+  color: #111827;
+  border-radius: 8px;
+}
+.app-drawer mat-list-item:hover,
+.app-drawer .drawer-links a:hover {
+  background: rgba(15, 23, 32, 0.04);
+}
+
+/* Drawer footer (sticky bottom) already declared in global but fine to override */
+.app-drawer .drawer-footer {
+  padding: 16px;
+  border-top: 1px solid rgba(15, 23, 32, 0.04);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+}
+
+/* Keep desktop nav visible and hide mobile-specific elements */
+@media (max-width: 920px) {
+  .chr-header-v3__nav {
+    display: none;
+  }
+  .chr-header-v3__actions {
+    display: none;
+  }
+}
