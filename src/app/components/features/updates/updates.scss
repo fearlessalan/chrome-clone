@@ -1,11 +1,12 @@
-/* Container dimensions reuse global container variable if present */
+/* ======================================================================
+   STYLES DU COMPOSANT "UPDATES"
+   ====================================================================== */
+
 .updates {
   padding: 28px 0;
-  .container {
-    max-width: var(--container, 1120px);
-    margin: 0 auto;
-    padding: 0 20px;
-  }
+
+  // Le .container ici va chopper les styles globaux qu'on a définis.
+  // Pas besoin de le redéfinir.
 
   .updates-header {
     display: flex;
@@ -21,35 +22,34 @@
     font-size: clamp(1.6rem, 3.6vw, 2.4rem);
     line-height: 1.02;
     font-weight: 800;
-    color: #0f1720;
+    color: var(--text-color-base); // <- Utilise la variable
   }
 
-  /* Small decorative split to mimic the provided fragmented text */
   .break {
     display: inline-block;
-    margin-left: 4px;
-    margin-right: 4px;
+    margin: 0 4px;
   }
 
   .updates-lead {
     margin: 0;
-    color: var(--muted, #6b7280);
+    color: var(--text-color-muted); // <- Utilise la variable
     max-width: 880px;
   }
 
-  /* grid: two cards side-by-side on desktop, stacked on mobile */
   .updates-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+    gap: var(--default-gap); // <- Utilise la variable
     align-items: start;
-    margin-top: 18px;
+    margin-top: var(--default-gap);
   }
 
   .update-card {
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 8px 30px rgba(12, 18, 30, 0.06);
+    // Ici on réutilise à fond nos variables globales pour les cards
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    box-shadow: var(--card-shadow);
+
     min-height: 180px;
     display: flex;
     align-items: stretch;
@@ -66,13 +66,13 @@
     .card-title {
       margin: 0;
       font-weight: 700;
-      color: #0f1720;
+      color: var(--text-color-base);
       font-size: 1.05rem;
     }
 
     .card-body {
       margin: 0;
-      color: rgba(15, 23, 32, 0.75);
+      color: rgba(15, 23, 32, 0.75); // On pourrait créer une variable --text-color-light si besoin
       flex: 1 1 auto;
       font-size: 0.95rem;
       line-height: 1.35;
@@ -84,45 +84,45 @@
       align-items: center;
     }
 
-    /* CTA look matches header download button */
     .card-link {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--primary, #1a73e8);
-      color: var(--on-primary, #fff);
+      // Et ici pour le bouton
+      background: var(--primary-color);
+      color: var(--primary-color-text);
       padding: 8px 14px;
-      border-radius: 12px;
+      border-radius: var(--button-border-radius);
       text-decoration: none;
       font-weight: 700;
-      box-shadow: 0 6px 18px rgba(26, 115, 232, 0.14);
+      box-shadow: 0 6px 18px rgba(26, 115, 232, 0.14); // On pourrait aussi en faire une variable si ce style se répète
       transition: transform 120ms ease, box-shadow 120ms ease;
-    }
 
-    .card-link:active {
-      transform: translateY(1px);
-      box-shadow: 0 4px 12px rgba(26, 115, 232, 0.12);
+      &:active {
+        transform: translateY(1px);
+        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.12);
+      }
     }
   }
 
-  /* visual mock below grid */
   .updates-visual {
     margin-top: 20px;
     display: flex;
     justify-content: center;
   }
+
   .visual-card {
     width: 100%;
     max-width: 720px;
-    padding: 20px;
-    border-radius: 12px;
-    background: linear-gradient(180deg, #fff, #fbfdff);
-    color: #374151;
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    background: var(--bg-soft-gradient);
+    color: var(--text-color-muted);
     box-shadow: 0 10px 30px rgba(12, 18, 30, 0.04);
     text-align: center;
   }
 
-  /* responsive */
+  // Les media queries, ça ne change pas
   @media (max-width: 920px) {
     .updates-grid {
       grid-template-columns: 1fr;

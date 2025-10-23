@@ -18,7 +18,7 @@
 
 /* burger button */
 .chr-header-v3__hamburger-button {
-  display: inline-flex;
+  display: none;
   align-items: center;
   justify-content: center;
   width: 44px;
@@ -125,5 +125,8 @@
   }
   .chr-header-v3__actions {
     display: none;
+  }
+  .chr-header-v3__hamburger-button {
+    display: inline-flex;
   }
 }

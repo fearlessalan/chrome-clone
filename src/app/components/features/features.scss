@@ -1,82 +1,81 @@
-.features-root {
+/* Fichier : features.scss mis à jour pour le sticky */
+@use '@angular/material' as mat;
+
+:host {
+  --primary-color-soft-bg: #e8f0fe;
+}
+
+.app-features-root {
   display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  margin: 24px auto;
-  max-width: var(--container, 1120px);
-  padding: 0 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  position: relative; // Contexte de positionnement
 }
 
-/* lateral nav */
-.chr-jumplinks-v2 {
+// La barre de navigation
+.app-features-nav {
   position: sticky;
-  top: 120px;
-  width: 220px;
-  flex: 0 0 220px;
+  top: 20px;
+  z-index: 10;
+
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-.chr-jumplinks-v2__list {
+.app-features-nav__list {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   list-style: none;
   margin: 0;
-  padding: 12px;
-  border-radius: 12px;
-  background: #fff;
+  padding: 0.5rem;
+  border-radius: 99px;
+  background-color: #f1f3f4;
+  // On ajoute une petite ombre pour l'effet "flottant"
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.chr-jumplinks-v2__list-item {
-  margin-bottom: 8px;
-}
-
-.chr-link--jumplink {
-  display: block;
-  padding: 10px 12px;
+.app-features-nav__link {
+  padding: 0.75rem 1.25rem;
+  border-radius: 99px;
   text-decoration: none;
-  color: var(--muted, #6b7280);
-  border-radius: 8px;
-  font-weight: 600;
+  font-weight: 500;
+  color: var(--text-color-muted);
+  transition: all 0.2s ease-in-out;
+
+  &.is-active {
+    background-color: var(--primary-color-soft-bg);
+    color: var(--primary-color);
+  }
+
+  &:not(.is-active):hover {
+    background-color: #e8eaed;
+  }
 }
 
-.chr-link--jumplink:hover {
-  background: rgba(26, 115, 232, 0.04);
-  color: #0f1720;
-}
-
-.chr-link--active {
-  background: rgba(26, 115, 232, 0.12);
-  color: var(--primary, #1a73e8);
-  box-shadow: 0 6px 18px rgba(26, 115, 232, 0.06);
-}
-
-/* download button style matches header CTA */
-.chr-download-button--jumplink {
-  width: 100%;
+.app-features-nav__cta {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: var(--primary, #1a73e8);
-  color: var(--on-primary, #fff);
-  padding: 10px 12px;
-  border-radius: 12px;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  color: var(--primary-color-text);
   border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--button-border-radius);
   font-weight: 700;
+  cursor: pointer;
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
 }
 
-/* content column stretches */
-.features-content {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-/* responsive: collapse lateral nav on small screens */
-@media (max-width: 920px) {
-  .features-root {
-    flex-direction: column;
-    padding: 0 12px;
-  }
-  .chr-jumplinks-v2 {
-    position: relative;
-    width: 100%;
-    order: 2;
-  }
+.app-features-content {
+  width: 100%;
 }

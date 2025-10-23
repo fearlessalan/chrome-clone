@@ -15,11 +15,12 @@ import { Yours } from './yours/yours';
 import { Safe } from './safe/safe';
 import { Fast } from './fast/fast';
 import { ByGoogle } from './by-google/by-google';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-features',
   standalone: true,
-  imports: [CommonModule, Updates, Yours, Safe, Fast, ByGoogle],
+  imports: [CommonModule, Updates, Yours, Safe, Fast, ByGoogle, MatIcon],
   templateUrl: './features.html',
   styleUrls: ['./features.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

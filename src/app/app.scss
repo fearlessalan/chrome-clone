@@ -1,3 +1,9 @@
+/* ========================================================================== */
+/*               STYLES DU COMPOSANT RACINE (APP.COMPONENT)
+/* ========================================================================== */
+
+// Ces variables devraient idéalement vivre dans styles.scss, mais on les garde
+// ici pour que ça fonctionne direct avec ce que tu m'as donné.
 :root {
   --primary: #1a73e8;
   --on-primary: #fff;
@@ -8,16 +14,49 @@
   --container: 1120px;
 }
 
+// --------------------------------------------------------------------------
+// LA CORRECTION DU STICKY : MISE EN PAGE FLEXBOX GLOBALE
+// --------------------------------------------------------------------------
+
+// On force le composant racine <app-root> et les conteneurs Material
+// à prendre 100% de la hauteur disponible. C'est la base de tout.
+:host,
+.app-shell, // mat-sidenav-container
+.app-container {
+  // mat-sidenav-content
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+// On applique un layout flex vertical au conteneur principal
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; // Il doit prendre toute la hauteur pour que ses enfants puissent se répartir l'espace.
+}
+
+// Le header et le footer ne changent pas.
+.app-header,
+.app-footer {
+  flex-shrink: 0;
+}
+
+// La zone de scroll ne change pas, elle est déjà bien configurée.
+.main-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+// --------------------------------------------------------------------------
+// TES STYLES EXISTANTS (CONSERVÉS)
+// --------------------------------------------------------------------------
+
 * {
   box-sizing: border-box;
 }
-html,
-body,
-app-root {
-  height: 100%;
-  margin: 0;
-  font-family: Inter, 'Roboto', Arial, sans-serif;
-}
+
 .chr-header {
   text-decoration: none;
   color: var(--muted);
@@ -25,17 +64,20 @@ app-root {
   padding: 6px 10px;
   border-radius: 8px;
 }
+
 .drawer-footer .btn-download {
   position: absolute;
   bottom: 16px;
   width: calc(100% - 32px);
 }
+
 .container {
   max-width: var(--container);
   margin: 0 auto;
   padding: 0 20px;
 }
 
+// Tes animations sont conservées aussi
 .animate-enter {
   transform: translateY(12px);
   opacity: 0;

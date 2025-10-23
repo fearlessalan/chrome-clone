@@ -1,0 +1,117 @@
+<section id="yours" class="yours-section" #section>
+  <div class="container">
+    <!-- Le titre avec l'animation de la pilule (inchangé) -->
+    <h2 class="yours-title">
+      <span class="pill-wrapper" #pill>
+        <span class="pill">
+          <span
+            *ngFor="let char of pillText; let i = index"
+            class="pill-char"
+            [style.--animation-delay.ms]="i * 20"
+          >
+            {{ char }}
+          </span>
+        </span>
+      </span>
+      et emportez-le partout
+    </h2>
+  </div>
+
+  <div class="take-over-container" #stickyContainer>
+    <div class="take-over-sticky-content">
+      <div class="animation-wrapper" #animationWrapper>
+        <div class="animation-mask">
+          <!--
+            PLACEHOLDER N°1 : Le fond d'écran "smooth" seul.
+            C'est la base de la transition, il est volontairement minimaliste.
+          -->
+          <svg
+            class="take-over-image background-image"
+            viewBox="0 0 400 300"
+            preserveAspectRatio="xMidYMid slice"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="yours-bg-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color: #f3f9ff" />
+                <stop offset="100%" style="stop-color: #e6f0ff" />
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#yours-bg-light)" />
+          </svg>
+
+          <!--
+            PLACEHOLDER N°2 : La capture "Light Mode".
+            Il utilise le MÊME dégradé de fond (id="yours-bg-light")
+            et la MÊME structure de rectangles que le Hero. C'est la clé.
+          -->
+          <svg
+            class="take-over-image first-capture"
+            viewBox="0 0 400 300"
+            preserveAspectRatio="xMidYMid slice"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="yours-bg-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color: #f3f9ff" />
+                <stop offset="100%" style="stop-color: #e6f0ff" />
+              </linearGradient>
+            </defs>
+            <!-- Le fond -->
+            <rect width="400" height="300" rx="12" fill="url(#yours-bg-light)" />
+            <!-- L'interface (rectangles superposés comme dans le hero) -->
+            <rect x="16" y="16" width="368" height="40" rx="8" fill="#fff" opacity="0.9" />
+            <rect x="16" y="72" width="368" height="212" rx="8" fill="#fff" opacity="0.6" />
+            <text
+              x="50%"
+              y="50%"
+              dominant-baseline="middle"
+              text-anchor="middle"
+              font-family="Roboto, sans-serif"
+              font-size="22"
+              fill="#0f1720"
+              font-weight="500"
+            >
+              Light Theme UI
+            </text>
+          </svg>
+
+          <!--
+            PLACEHOLDER N°3 : La capture "Dark Mode".
+            Même structure, mais avec les couleurs inversées pour le thème sombre.
+          -->
+          <svg
+            class="take-over-image second-capture"
+            viewBox="0 0 400 300"
+            preserveAspectRatio="xMidYMid slice"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="yours-bg-dark" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color: #0f1720" />
+                <stop offset="100%" style="stop-color: #1f2937" />
+              </linearGradient>
+            </defs>
+            <!-- Le fond sombre -->
+            <rect width="400" height="300" rx="12" fill="url(#yours-bg-dark)" />
+            <!-- L'interface sombre (rectangles plus foncés) -->
+            <rect x="16" y="16" width="368" height="40" rx="8" fill="#0f1720" opacity="0.2" />
+            <rect x="16" y="72" width="368" height="212" rx="8" fill="#0f1720" opacity="0.1" />
+            <text
+              x="50%"
+              y="50%"
+              dominant-baseline="middle"
+              text-anchor="middle"
+              font-family="Roboto, sans-serif"
+              font-size="22"
+              fill="#e5e7eb"
+              font-weight="500"
+            >
+              Dark Theme UI
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

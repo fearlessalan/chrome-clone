@@ -1,14 +1,16 @@
+<!-- Le Sidenav Container devient la base de notre layout -->
 <mat-sidenav-container class="app-shell" autosize>
   <!-- Global drawer (mobile) -->
   <mat-sidenav
+    #drawer
     mode="over"
     position="start"
-    [opened]="sidenavService.opened()"
-    (closedStart)="sidenavService.close()"
     class="app-drawer"
     role="dialog"
     aria-label="Navigation"
     style="height: 100vh"
+    [opened]="sidenavService.opened()"
+    (openedChange)="sidenavService.opened.set($event)"
   >
     <nav class="drawer-nav">
       <mat-nav-list>
@@ -40,15 +42,15 @@
     </nav>
   </mat-sidenav>
 
-  <!-- Page content -->
-  <mat-sidenav-content>
-    <app-header></app-header>
+  <mat-sidenav-content class="app-container">
+    <app-header class="app-header"></app-header>
 
-    <main class="main">
+    <!-- Le <main> reste notre zone de scroll, ça c'est parfait. -->
+    <main class="main-scroll-container">
       <app-hero></app-hero>
       <app-features></app-features>
     </main>
 
-    <app-footer></app-footer>
+    <app-footer class="app-footer"></app-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

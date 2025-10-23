@@ -1,87 +1,70 @@
-<div class="features-root container" #root>
-  <!-- lateral jumplinks (desktop) -->
-  <aside class="chr-jumplinks-v2" aria-label="Navigation des sections">
-    <ul class="chr-jumplinks-v2__list shadow-elevation-2" role="navigation">
-      <li class="chr-jumplinks-v2__list-item">
+<!-- Fichier : features.html corrigé -->
+
+<div class="app-features-root container" #root>
+  <!-- La barre de navigation, maintenant en haut -->
+  <nav class="app-features-nav" aria-label="Navigation des fonctionnalités">
+    <ul class="app-features-nav__list">
+      <li class="app-features-nav__item">
         <a
           href="#updates"
-          class="chr-link chr-link--jumplink"
-          [class.chr-link--active]="isActive('updates')"
+          class="app-features-nav__link"
+          [class.is-active]="activeAnchor() === 'updates'"
         >
-          <span class="chr-link__label">Mises à jour</span>
+          Mises à jour
         </a>
       </li>
-
-      <li class="chr-jumplinks-v2__list-item">
+      <li class="app-features-nav__item">
         <a
           href="#yours"
-          class="chr-link chr-link--jumplink"
-          [class.chr-link--active]="isActive('yours')"
+          class="app-features-nav__link"
+          [class.is-active]="activeAnchor() === 'yours'"
         >
-          <span class="chr-link__label">À vous</span>
+          À vous
         </a>
       </li>
-
-      <li class="chr-jumplinks-v2__list-item">
+      <li class="app-features-nav__item">
         <a
           href="#safe"
-          class="chr-link chr-link--jumplink"
-          [class.chr-link--active]="isActive('safe')"
+          class="app-features-nav__link"
+          [class.is-active]="activeAnchor() === 'safe'"
         >
-          <span class="chr-link__label">Sécurisé</span>
+          Sécurisé
         </a>
       </li>
-
-      <li class="chr-jumplinks-v2__list-item">
+      <li class="app-features-nav__item">
         <a
           href="#fast"
-          class="chr-link chr-link--jumplink"
-          [class.chr-link--active]="isActive('fast')"
+          class="app-features-nav__link"
+          [class.is-active]="activeAnchor() === 'fast'"
         >
-          <span class="chr-link__label">Rapide</span>
+          Rapide
         </a>
       </li>
-
-      <li class="chr-jumplinks-v2__list-item">
+      <li class="app-features-nav__item">
         <a
           href="#by-google"
-          class="chr-link chr-link--jumplink"
-          [class.chr-link--active]="isActive('by-google')"
+          class="app-features-nav__link"
+          [class.is-active]="activeAnchor() === 'by-google'"
         >
-          <span class="chr-link__label">Par Google</span>
+          Par Google
         </a>
       </li>
-
-      <li class="chr-jumplinks-v2__list-item">
-        <button
-          type="button"
-          id="js-download-header-jumplink"
-          class="chr-download-button chr-download-button--jumplink"
-        >
+      <li class="app-features-nav__item app-features-nav__item--cta">
+        <button type="button" class="app-features-nav__cta">
           Télécharger
-          <svg
-            class="chr-button__icon chr-download-button__icon"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              fill="currentColor"
-              d="M5 20h14v-2H5v2zm7-18v10l4-4 1.4 1.4L12 17l-5.4-5.6L7 8l4 4V2h2z"
-            ></path>
-          </svg>
+          <mat-icon>download</mat-icon>
+          <!-- On utilise MatIcon, c'est plus propre -->
         </button>
       </li>
     </ul>
-  </aside>
+  </nav>
 
-  <!-- content column -->
-  <div class="features-content">
-    <app-updates></app-updates>
-    <app-yours></app-yours>
-    <app-safe></app-safe>
-    <app-fast></app-fast>
-    <app-by-google></app-by-google>
+  <!-- Le contenu des sections, ça ne change pas -->
+  <div class="app-features-content">
+    <app-updates id="updates"></app-updates>
+    <app-yours id="yours"></app-yours>
+    <app-safe id="safe"></app-safe>
+    <app-fast id="fast"></app-fast>
+    <app-by-google id="by-google"></app-by-google>
   </div>
 </div>

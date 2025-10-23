@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DOCUMENT,
+  effect,
+  inject,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -29,8 +37,19 @@ import { SidenavService } from './services/sidenav';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App implements OnInit {
-  // <-- expose public pour pouvoir l'utiliser dans le template
-  constructor(public sidenavService: SidenavService) {}
+  private renderer = inject(Renderer2);
+  private document = inject(DOCUMENT);
+
+  constructor(public sidenavService: SidenavService) {
+    // L'effect va s'executer à chaque fois que le signal 'opened' change
+    effect(() => {
+      if (this.sidenavService.opened()) {
+        this.renderer.addClass(this.document.body, 'sidenav-open');
+      } else {
+        this.renderer.removeClass(this.document.body, 'sidenav-open');
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.sidenavService.initAutoClose(920);
