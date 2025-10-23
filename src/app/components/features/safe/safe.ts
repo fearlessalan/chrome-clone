@@ -1,72 +1,128 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+
+// On définit un type pour nos cartes pour un code plus propre
+type SafeCard = {
+  id: string;
+  gridArea: string; // Pour le positionnement dans la grille CSS
+  variant: 'white' | 'light-blue' | 'blue' | 'dark-blue';
+
+  // Contenu de la face AVANT
+  front: {
+    title: string;
+    content: string;
+    icon?: string;
+  };
+
+  // Contenu de la face ARRIÈRE
+  back: {
+    title: string;
+    content: string;
+    cta: string;
+  };
+};
 
 @Component({
   selector: 'app-safe',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <section id="safe" class="feature-section" aria-labelledby="safe-title">
-      <div class="feature-inner">
-        <h2 id="safe-title">Sécurisé</h2>
-        <p class="lead">
-          Chrome protège votre navigation : mises à jour, navigation sécurisée et contrôle de la vie
-          privée.
-        </p>
-
-        <div class="cards">
-          <article class="card card-blue">
-            <h3>Protection automatique</h3>
-            <p>Chrome te protège contre les sites malveillants et les téléchargements suspects.</p>
-          </article>
-
-          <article class="card card-yellow">
-            <h3>Contrôles de confidentialité</h3>
-            <p>
-              Gère les permissions des sites, efface facilement tes données et contrôle les
-              trackers.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-  `,
-  styles: [
-    `
-      .feature-section {
-        padding: 36px 0;
-      }
-      .feature-inner {
-        max-width: 920px;
-        margin: 0 auto;
-      }
-      .lead {
-        color: var(--muted, #6b7280);
-        margin-bottom: 18px;
-      }
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-      }
-      .card {
-        padding: 16px;
-        border-radius: 12px;
-        box-shadow: 0 8px 30px rgba(12, 18, 30, 0.04);
-      }
-      .card-blue {
-        background: rgb(232, 240, 254);
-      } /* light blue */
-      .card-yellow {
-        background: rgb(254, 247, 224);
-      } /* light yellow */
-      @media (max-width: 920px) {
-        .cards {
-          grid-template-columns: 1fr;
-        }
-      }
-    `,
-  ],
+  imports: [CommonModule, MatIconModule],
+  templateUrl: './safe.html',
+  styleUrls: ['./safe.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Safe {}
+export class Safe {
+  // --- ÉTAT DU COMPOSANT ---
+
+  // On stocke les données de nos cartes dans un signal
+  readonly cards = signal<SafeCard[]>([
+    {
+      id: 'password-manager',
+      gridArea: 'password',
+      variant: 'white',
+      front: {
+        title: 'Gestionnaire de mots de passe sécurisés sur tous les sites.',
+        content: 'elisa.beckett',
+      },
+      back: {
+        title: 'Enregistrer le mot de passe?',
+        content:
+          'Avec le Gestionnaire de mots de passe de Google intégré à Chrome, vous pouvez facilement créer, enregistrer et renseigner vos mots de passe.',
+        cta: 'En savoir plus',
+      },
+    },
+    {
+      id: 'safety-check',
+      gridArea: 'check',
+      variant: 'light-blue',
+      front: {
+        title: 'En un clic, vérifiez votre niveau de sécurité en temps réel.',
+        content: '',
+        icon: 'add_circle',
+      },
+      back: {
+        title: 'Contrôle de sécurité effectué. Il y a peu.',
+        content:
+          'La confidentialité de votre expérience de navigation sur Internet, y compris des mots de passe, des extensions et des paramètres.',
+        cta: 'En savoir plus',
+      },
+    },
+    {
+      id: 'privacy-guide',
+      gridArea: 'guide',
+      variant: 'dark-blue',
+      front: {
+        title: 'Guide sur la confidentialité',
+        content:
+          'Gardez le contrôle de votre confidentialité grâce à des paramètres faciles à utiliser.',
+      },
+      back: {
+        title: 'Consulter le Guide sur la confidentialité',
+        content:
+          'Avec Chrome, vous savez exactement ce que vous partagez en ligne et avec qui. Consultez le Guide sur la confidentialité pour découvrir pas à pas vos paramètres de confidentialité.',
+        cta: 'En savoir plus',
+      },
+    },
+    {
+      id: 'safe-browsing',
+      gridArea: 'browsing',
+      variant: 'white',
+      front: {
+        title: 'Navigation sécurisée avec protection renforcée',
+        content: 'Naviguez en toute confiance, avec une meilleure protection en ligne.',
+        icon: 'add_circle',
+      },
+      back: {
+        title: 'Le site que vous allez ouvrir contient des logiciels malveillants',
+        content:
+          "La navigation sécurisée de Chrome vous avertit en cas d'attaque par un logiciel malveillant ou par hameçonnage.",
+        cta: 'En savoir plus',
+      },
+    },
+  ]);
+
+  // On utilise un Map pour stocker l'état "retourné" de chaque carte.
+  // La clé est l'ID de la carte, la valeur est un signal (true/false).
+  readonly flippedStates = new Map<string, WritableSignal<boolean>>();
+
+  constructor() {
+    // On initialise le Map : pour chaque carte, on crée un signal initialisé à 'false'.
+    this.cards().forEach((card) => {
+      this.flippedStates.set(card.id, signal(false));
+    });
+  }
+
+  // Méthode appelée au clic sur une carte
+  flipCard(cardId: string): void {
+    const cardState = this.flippedStates.get(cardId);
+    if (cardState) {
+      // On inverse la valeur du signal (true -> false, false -> true)
+      cardState.update((value) => !value);
+    }
+  }
+
+  // Méthode pour vérifier si une carte est retournée (utilisée dans le template)
+  isFlipped(cardId: string): boolean {
+    return this.flippedStates.get(cardId)?.() || false;
+  }
+}

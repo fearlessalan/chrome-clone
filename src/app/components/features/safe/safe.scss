@@ -1,0 +1,148 @@
+:host {
+  display: block;
+  background-color: #f8f9fa;
+  padding: 8rem 0;
+}
+
+.cards-grid {
+  display: grid;
+  gap: 1.5rem;
+  // On définit notre grille asymétrique
+  grid-template-areas:
+    'password check'
+    'password guide'
+    'browsing guide';
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.card-container {
+  // La base pour la perspective 3D
+  perspective: 1000px;
+  cursor: pointer;
+
+  // On applique la zone de grille définie dans le TS
+  &[style*='grid-area'] {
+    grid-area: var(--grid-area);
+  }
+}
+
+.card-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  min-height: 250px; // Hauteur minimale pour l'harmonie
+}
+
+// Quand le conteneur a la classe .is-flipped, on fait tourner le flipper
+.card-container.is-flipped .card-flipper {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; // Cache la face qui est derrière
+  border-radius: 1.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-back {
+  // La face arrière est déjà retournée de 180 degrés au départ
+  transform: rotateY(180deg);
+}
+
+// --- Variantes de couleurs ---
+.variant--white {
+  background-color: #ffffff;
+  color: #202124;
+}
+.variant--light-blue {
+  background-color: #e8f0fe;
+  color: #1967d2;
+}
+.variant--blue {
+  background-color: #d2e3fc;
+  color: #0b57d0;
+}
+.variant--dark-blue {
+  background-color: #3c4043;
+  color: #ffffff;
+}
+
+// --- Styles du contenu ---
+.card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+// Face avant
+.front-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+.front-body {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+.front-icon {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+.password-mock input {
+  width: 80%;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.guide-mock mat-icon {
+  font-size: 8rem;
+  width: 8rem;
+  height: 8rem;
+  color: #1967d2;
+}
+
+// Face arrière
+.back-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.back-description {
+  flex-grow: 1;
+}
+.back-cta {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+  color: inherit;
+  mat-icon {
+    margin-left: 0.5rem;
+  }
+}
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+}
