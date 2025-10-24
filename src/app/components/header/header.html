@@ -1,58 +1,26 @@
-<header class="chr-header-v3__bar container" role="banner">
-  <div class="chr-header-v3__left">
-    <button
-      class="chr-header-v3__hamburger-button"
-      aria-label="Ouvrir le panneau de navigation"
-      (click)="toggleDrawer()"
-    >
-      <mat-icon aria-hidden="true">menu</mat-icon>
+<header class="header">
+  <div class="header__inner container">
+    <!-- LOGO -->
+    <div class="header__logo">
+      <img src="assets/chrome.png" alt="ChromeClone logo" class="logo-img" />
+      <span class="logo-text">ChromeClone</span>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="header__nav">
+      <a href="#features" class="nav-link">Fonctionnalités</a>
+      <a href="#yours" class="nav-link">Partout avec vous</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+    </nav>
+
+    <!-- CTA -->
+    <div class="header__cta">
+      <button mat-flat-button color="primary" class="btn-primary">Télécharger Chrome</button>
+    </div>
+
+    <!-- MENU BURGER -->
+    <button mat-icon-button class="header__menu" aria-label="Open menu" (click)="toggleMenu()">
+      <mat-icon>menu</mat-icon>
     </button>
-
-    <a href="/intl/fr/chrome/" class="chr-header-v3__logo-link" title="Google Chrome" tabindex="0">
-      <!-- Replace with your inline SVG logo / image -->
-      <svg
-        class="chr-header-v3__logo-icon"
-        width="134"
-        height="36"
-        viewBox="0 0 134 36"
-        role="img"
-        aria-label="Google Chrome"
-      >
-        <text x="6" y="22" font-family="Inter, Roboto, Arial" font-size="16" fill="var(--primary)">
-          Chrome
-        </text>
-      </svg>
-    </a>
-  </div>
-
-  <nav class="chr-header-v3__nav" aria-label="navigation menu" aria-hidden="false">
-    <ul class="chr-header-v3__nav-list" role="menubar">
-      <li role="none">
-        <a role="menuitem" class="chr-header-v3__nav-li-link" href="/intl/fr/chrome/safety/"
-          >Sécurité</a
-        >
-      </li>
-      <li role="none">
-        <a role="menuitem" class="chr-header-v3__nav-li-link" href="/intl/fr/chrome/browser-tools/"
-          >Par Google</a
-        >
-      </li>
-      <li role="none">
-        <a
-          role="menuitem"
-          class="chr-header-v3__nav-li-link chr-link--external"
-          href="https://chromewebstore.google.com/category/extensions"
-          target="_blank"
-          rel="noopener"
-        >
-          Extensions
-          <mat-icon class="external-icon" aria-hidden="true">open_in_new</mat-icon>
-        </a>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="chr-header-v3__actions">
-    <button mat-flat-button class="btn btn-primary">Download</button>
   </div>
 </header>

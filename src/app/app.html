@@ -1,57 +1,19 @@
-<!-- Le Sidenav Container devient la base de notre layout -->
-<mat-sidenav-container class="app-shell" autosize>
-  <!-- Global drawer (mobile) -->
-  <mat-sidenav
-    #drawer
-    mode="over"
-    position="start"
-    class="app-drawer"
-    role="dialog"
-    aria-label="Navigation"
-    style="height: 100vh"
-    [opened]="sidenavService.opened()"
-    (openedChange)="sidenavService.opened.set($event)"
-  >
-    <nav class="drawer-nav">
-      <mat-nav-list>
-        <a class="chr-header" mat-list-item href="/intl/fr/chrome/" (click)="sidenavService.close()"
-          >Chrome</a
-        >
-        <hr />
-        <a mat-list-item href="/intl/fr/chrome/safety/" (click)="sidenavService.close()"
-          >Sécurité</a
-        >
-        <a mat-list-item href="/intl/fr/chrome/browser-tools/" (click)="sidenavService.close()"
-          >Par Google</a
-        >
-        <a
-          mat-list-item
-          href="https://chromewebstore.google.com/category/extensions"
-          target="_blank"
-          rel="noopener"
-          (click)="sidenavService.close()"
-          >Extensions</a
-        >
-      </mat-nav-list>
+<!-- ====================================================================== -->
+<!-- 🧩 LAYOUT PRINCIPAL DE L'APPLICATION                                  -->
+<!-- ====================================================================== -->
 
-      <div class="drawer-footer" style="padding: 16px">
-        <button mat-flat-button class="btn btn-download" (click)="sidenavService.close()">
-          Download Chrome
-        </button>
-      </div>
-    </nav>
-  </mat-sidenav>
+<app-header></app-header>
 
-  <mat-sidenav-content class="app-container">
-    <app-header class="app-header"></app-header>
+<!-- Conteneur principal qui gère le scroll -->
+<div class="main-scroll-container">
+  <main class="main-content">
+    <app-hero></app-hero>
+    <app-features></app-features>
+    <app-faq></app-faq>
+    <app-closing-banner></app-closing-banner>
+    <app-footer></app-footer>
+  </main>
+</div>
 
-    <!-- Le <main> reste notre zone de scroll, ça c'est parfait. -->
-    <main class="main-scroll-container">
-      <app-hero></app-hero>
-      <app-features></app-features>
-      <app-faq></app-faq>
-      <app-closing-banner></app-closing-banner>
-      <app-footer class="app-footer"></app-footer>
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<!-- Sidenav Mobile (affiché uniquement en petit écran) -->
+<app-sidenav></app-sidenav>

@@ -1,132 +1,125 @@
-/* Header bar */
-.chr-header-v3__bar {
+@use 'mixins' as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  z-index: 1000;
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  height: var(--header-height);
-  padding: 0 12px;
-  background: var(--bg);
-}
+  transition: all var(--transition-medium);
 
-/* left cluster (burger + logo) */
-.chr-header-v3__left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* burger button */
-.chr-header-v3__hamburger-button {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-/* logo link */
-.chr-header-v3__logo-link {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-/* nav desktop */
-.chr-header-v3__nav {
-  display: flex;
-  align-items: center;
-  margin-left: 18px;
-}
-.chr-header-v3__nav-list {
-  display: flex;
-  gap: 18px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-}
-.chr-header-v3__nav-li-link {
-  text-decoration: none;
-  color: var(--muted);
-  font-weight: 600;
-  padding: 6px 10px;
-  border-radius: 8px;
-}
-.chr-header-v3__nav-li-link:hover,
-.chr-header-v3__nav-li-link:focus {
-  color: #0f1720;
-  background: rgba(26, 115, 232, 0.04);
-}
-
-/* actions area (desktop Download) */
-.chr-header-v3__actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Drawer header inside sidenav */
-.app-drawer .drawer-header {
-  padding: 20px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid rgba(15, 23, 32, 0.04);
-}
-.app-drawer .drawer-header .logo-title {
-  display: flex;
-  flex-direction: column;
-}
-.app-drawer .drawer-header .logo-title .title {
-  font-weight: 800;
-  color: #111827;
-  font-size: 1rem;
-}
-.app-drawer .drawer-header .logo-title .subtitle {
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-/* Drawer links list (mat-nav-list / anchor fallback) */
-.app-drawer mat-nav-list,
-.app-drawer .drawer-links {
-  padding: 12px 8px;
-}
-.app-drawer mat-list-item,
-.app-drawer .drawer-links a {
-  display: flex;
-  align-items: center;
-  padding: 12px 14px;
-  text-decoration: none;
-  color: #111827;
-  border-radius: 8px;
-}
-.app-drawer mat-list-item:hover,
-.app-drawer .drawer-links a:hover {
-  background: rgba(15, 23, 32, 0.04);
-}
-
-/* Drawer footer (sticky bottom) already declared in global but fine to override */
-.app-drawer .drawer-footer {
-  padding: 16px;
-  border-top: 1px solid rgba(15, 23, 32, 0.04);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-}
-
-/* Keep desktop nav visible and hide mobile-specific elements */
-@media (max-width: 920px) {
-  .chr-header-v3__nav {
-    display: none;
+  .header__inner {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .chr-header-v3__actions {
-    display: none;
+
+  /* ---------- Logo ---------- */
+  .header__logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
   }
-  .chr-header-v3__hamburger-button {
-    display: inline-flex;
+
+  /* ---------- Navigation ---------- */
+  .header__nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--color-text);
+      transition: color var(--transition-fast);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  /* ---------- CTA ---------- */
+  .header__cta {
+    button {
+      font-size: 0.95rem;
+      border-radius: var(--radius);
+      padding: 0.4rem 1.2rem;
+      font-weight: 500;
+    }
+  }
+
+  /* ---------- Burger Menu ---------- */
+  .header__menu {
+    display: none;
+    color: var(--color-text);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+
+    mat-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 🔹 Responsive Design
+   -------------------------------------------------------------------------- */
+@include respond-to('tablet') {
+  .header {
+    height: 60px;
+
+    .header__inner {
+      justify-content: space-between;
+    }
+
+    .header__nav {
+      display: none;
+    }
+
+    .header__cta {
+      display: none;
+    }
+
+    .header__menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+@include respond-to('mobile') {
+  .header {
+    height: 56px;
+
+    .header__logo .logo-text {
+      font-size: 1rem;
+    }
+
+    .header__menu mat-icon {
+      font-size: 26px;
+    }
   }
 }

@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  svg {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    background: var(--color-surface);
+  }
+
+  text {
+    user-select: none;
+    pointer-events: none;
+    font-weight: 600;
+  }
+}
+
+/* Petits ajustements de ratio selon type */
+.skeleton[data-type='login-ui'],
+.skeleton[data-type='dark-mode-ui'] {
+  aspect-ratio: 260 / 420;
+}
+
+.skeleton[data-type='search-ui'] {
+  aspect-ratio: 727 / 444;
+}
+
+/* Responsive adaptation */
+@media (max-width: 900px) {
+  .skeleton {
+    svg {
+      border-radius: 10px;
+    }
+  }
+}
