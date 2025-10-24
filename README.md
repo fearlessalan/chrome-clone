@@ -1,59 +1,148 @@
-# ChromeClone
+# Chrome Landing Page — Clone Technique & Expérimental
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.2.
+> Précision > Spectacle — un clone pensé pour apprendre et durer.
 
-## Development server
+## 🔗 Live Demo
 
-To start a local development server, run:
+👉 [Voir le site en ligne sur Vercel](https://chrome-clone-demo.vercel.app) *(remplacer ce lien par ton déploiement réel)*
 
-```bash
-ng serve
+---
+
+## Présentation
+
+Ce projet est une réimplémentation technique de la page d'accueil de **Google Chrome**, conçue comme un laboratoire pour comprendre les mécaniques d'animation, de layout et de performance. L'objectif n'est pas de cloner, mais d'apprendre, d'analyser et de reproduire avec rigueur.
+
+Le rendu est construit sous **Angular 20+**, avec **GSAP + ScrollTrigger** pour les animations, et une architecture **standalone** propre, modulaire et prête à faire évoluer.
+
+> Ce projet n’a **aucun lien avec Google**. Il sert à la démonstration et à l'apprentissage.
+
+---
+
+## 🧩 Stack Technique
+
+* **Framework :** Angular 20+ (Standalone Components)
+* **Animations :** GSAP + ScrollTrigger
+* **UI :** Angular Material (Material 3)
+* **Styles :** SCSS avec variables CSS
+* **Langage :** TypeScript
+
+---
+
+## 📂 Structure du projet
+
+```
+src/app/
+├── components/
+│   ├── hero/
+│   ├── header/
+│   ├── footer/
+│   ├── features/
+│   │   ├── updates/
+│   │   ├── yours/
+│   │   ├── safe/
+│   │   ├── fast/
+│   │   └── by-google/
+├── services/
+│   └── sidenav.ts
+├── app.ts
+├── app.html
+└── styles.scss
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Chaque section (hero, features, etc.) est un **composant standalone** isolé, clair et testable.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## ⚙️ Fonctionnalités principales
+
+### 🌀 Hero section
+
+* Scroll-driven animation contrôlée via GSAP.
+* Timelines synchronisées : zoom, alignement, translation horizontale.
+* Responsive adaptatif : animation complète sur desktop, fallback simplifié sur mobile.
+
+### 🧭 Features section
+
+* Navigation sticky avec **IntersectionObserver** pour détecter la section active.
+* Sous-composants pour chaque ancre : updates, yours, safe, fast, by-google.
+
+### 🧱 Architecture Angular
+
+* Signals pour la réactivité locale.
+* Mode `OnPush` activé pour performance maximale.
+* `runOutsideAngular()` pour exécuter GSAP sans polluer la détection de changements.
+
+---
+
+## 🖼️ Placeholders & mentions légales
+
+* Les images utilisées sont **des placeholders** servant uniquement à représenter la mise en page.
+* Aucun logo officiel, image ou ressource Google n'est inclus.
+* Si tu souhaites publier le projet, **remplace les placeholders** par des visuels libres ou tes propres créations.
+* Ce projet n’a **aucune affiliation avec Google**.
+
+---
+
+## ▶️ Lancer le projet localement
+
+1. Installe les dépendances :
 
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. Lance le serveur de développement :
 
 ```bash
-ng generate --help
+ng serve --open
 ```
 
-## Building
-
-To build the project run:
+3. Build pour production :
 
 ```bash
-ng build
+ng build --configuration production
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 🧰 Commandes utiles
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+| Commande        | Description                    |
+| --------------- | ------------------------------ |
+| `ng serve`     | Lance le projet localement     |
+| `npm run build` | Build optimisé pour production |
+
+
+---
+
+## ⚙️ Notes techniques
+
+* Les animations ScrollTrigger se synchronisent avec la hauteur du `spacer` (modifiable en SCSS).
+* Breakpoints : mobile ≤ 600px, tablette ≤ 1024px, desktop > 1024px.
+* Accessibilité : balises ARIA, structure sémantique, smooth scroll natif.
+
+---
+
+## 📦 Déploiement sur Vercel
+
+1. Build ton projet :
 
 ```bash
-ng test
+ng build --configuration production
 ```
 
-## Running end-to-end tests
+2. Pousse le dossier `/dist` sur ton repo GitHub.
+3. Connecte ton repo à **Vercel** et déploie.
 
-For end-to-end (e2e) testing, run:
+> Le lien Vercel de démo est placé en haut du README. Tu pourras le remplacer une fois ton projet live.
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🪶 Licence
 
-## Additional Resources
+Projet libre pour apprentissage et démonstration.
+Tu peux y ajouter une licence MIT si tu veux l'ouvrir publiquement.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+> *Un projet sobre. Sans bruit. Juste du code qui respire la maîtrise.*
