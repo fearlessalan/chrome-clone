@@ -18,6 +18,8 @@ import { Features } from './components/features/features';
 import { Footer } from './components/footer/footer';
 
 import { SidenavService } from './services/sidenav';
+import { Faq } from './components/faq/faq';
+import { ClosingBanner } from './components/closing-banner/closing-banner';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +33,8 @@ import { SidenavService } from './services/sidenav';
     Hero,
     Features,
     Footer,
+    Faq,
+    ClosingBanner,
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],

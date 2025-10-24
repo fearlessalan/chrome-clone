@@ -1,8 +1,118 @@
-.site-footer {
+:host {
+  display: block;
+  background-color: #f1f3f4;
+  color: #5f6368;
+  padding: 4rem 0 2rem 0;
+  font-size: 0.9rem;
+}
+
+.container {
+  max-width: var(--container-max-width, 1120px);
+  margin: 0 auto;
+  padding: 0 var(--container-padding, 20px);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    color: #202124;
+  }
+}
+
+// --- Partie supérieure ---
+.footer-main {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #dadce0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.social-section {
   display: flex;
   align-items: center;
+  gap: 1rem;
+  font-weight: 500;
+  color: #202124;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.5rem;
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e8eaed;
+    &:hover {
+      background-color: #dadce0;
+    }
+  }
+}
+
+.links-grid {
+  display: grid;
+  // 5 colonnes sur desktop
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+}
+
+.links-column {
+  .column-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #202124;
+    margin: 0 0 1rem 0;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+// --- Partie inférieure ---
+.footer-bottom {
+  padding-top: 2rem;
+  display: flex;
   justify-content: space-between;
-  padding: 28px 0;
-  color: var(--muted);
-  border-top: 1px solid rgba(15, 23, 32, 0.04);
+  align-items: center;
+}
+
+.bottom-left,
+.bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.google-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #5f6368;
+}
+
+// --- Responsive ---
+@media (max-width: 900px) {
+  .links-grid {
+    grid-template-columns: repeat(3, 1fr); // 3 colonnes sur tablette
+  }
+}
+
+@media (max-width: 600px) {
+  .links-grid {
+    grid-template-columns: repeat(2, 1fr); // 2 colonnes sur mobile
+  }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
 }
