@@ -1,0 +1,39 @@
+<section id="fast" class="fast-section" #section>
+  <div class="carousel-container" #carousel>
+    <div class="carousel-wrapper" #carouselWrapper>
+      <div
+        *ngFor="let card of cards()"
+        class="fast-card"
+        [class.is-feature]="card.isFeature"
+        [style.background-color]="card.bgColor"
+        [style.color]="card.textColor"
+      >
+        <ng-container *ngIf="card.isFeature">
+          <div class="feature-card-content">
+            <div class="text-content">
+              <h2 class="title">{{ card.title }}</h2>
+              <p class="description">{{ card.description }}</p>
+              <a href="#" class="cta">{{ card.cta }} <mat-icon>arrow_forward</mat-icon></a>
+            </div>
+            <div class="visual-content">
+              <svg viewBox="0 0 500 300">
+                <rect width="500" height="300" rx="12" fill="#ffffff" />
+              </svg>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!card.isFeature">
+          <div class="normal-card-content">
+            <h3 class="title">{{ card.title }}</h3>
+            <p class="description">{{ card.description }}</p>
+            <div class="visual-content-normal">
+              <svg viewBox="0 0 300 200">
+                <rect width="300" height="200" rx="12" fill="#ffffff" />
+              </svg>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>

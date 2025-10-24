@@ -1,0 +1,152 @@
+:host {
+  display: block;
+  padding: 8rem 0;
+}
+
+.container {
+  max-width: var(--container-max-width, 1120px);
+  margin: 0 auto;
+  padding: 0 var(--container-padding, 20px);
+}
+
+.main-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4rem;
+  .highlight {
+    color: #fbbc05; // Jaune Google pour le mot "conçu"
+  }
+}
+
+// --- Grande Carte IA (statique) ---
+.ai-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  background-color: #fef7e0; // Jaune très clair
+  padding: 3rem;
+  border-radius: 1.5rem;
+  margin-bottom: 2rem;
+
+  .ai-eyebrow {
+    font-weight: 500;
+    color: #b56200;
+  }
+  .ai-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+  }
+  .ai-description {
+    line-height: 1.6;
+  }
+  .ai-cta {
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--primary-color, #1a73e8);
+  }
+  .ai-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// --- Grille des Cartes Interactives (CORRIGÉE pour 2 cartes) ---
+.cards-grid {
+  display: grid;
+  gap: 1.5rem;
+  // On définit une grille simple avec deux colonnes égales.
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'a b';
+}
+
+// --- Mécanisme de Flip 3D ---
+.card-container {
+  perspective: 1200px;
+  min-height: 350px; // Hauteur minimale pour un bon rendu
+  grid-area: var(--grid-area); // Applique la zone de grille (a ou b)
+}
+
+.card-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  transform-style: preserve-3d;
+}
+
+// La classe .is-flipped est ajoutée par le TS pour déclencher la rotation
+.card-container.is-flipped .card-flipper {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; // Cache la face cachée
+  border-radius: 1.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-back {
+  // La face arrière est pré-retournée
+  transform: rotateY(180deg);
+}
+
+// --- Variantes de couleurs pour les cartes ---
+.variant--yellow {
+  background-color: #fef7e0;
+  color: #b56200;
+}
+.variant--white {
+  background-color: #ffffff;
+  color: #202124;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+// --- Contenu des cartes ---
+.front-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+}
+.front-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+}
+.back-content {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.back-cta {
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--primary-color, #1a73e8);
+}
+
+.toggle-btn {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.08);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
