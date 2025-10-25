@@ -1,179 +1,109 @@
-:root {
-  --mosaic-gap: 28px;
-  --card-height: 420px;
-  --center-height: 444px;
-  --container-width: 1118.57px; /* exact observed width */
-  --spacer-height: 1400px; /* exact observed height */
-  --primary: #1a73e8;
-  --on-primary: #fff;
+@use '../../../styles/mixins' as *;
+
+:host {
+  display: block;
 }
 
-/* HERO container - force 100vh on desktop, vertical centre */
-.chr-hero {
+.hero {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: #fff;
+  padding-top: 15vh;
+  overflow: visible;
+}
+
+.hero__wrapper {
+  z-index: 10;
+  position: relative;
+}
+
+.hero__headline {
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 0.5em 0;
+  color: #202124;
+}
+
+.hero__download-btn {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+}
+
+.hero__video {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+.mosaic {
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  overflow: visible;
+  margin-top: 5vh;
+}
+
+.mosaic__track {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  will-change: transform;
+  height: 100%;
+}
+
+.mosaic__card {
+  flex: 0 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 48px 0;
+}
 
-  /* header block (logo + H1 + CTA) */
-  .chr-chrome-hero__wrapper {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 28px;
-    justify-content: center; /* center content horizontally */
-    text-align: center;
-    flex-direction: column;
-  }
+.mosaic__card--center {
+  width: 70vw;
+  z-index: 3;
+}
 
-  .chr-chrome-hero__logo > svg,
-  .chr-chrome-hero__logo > img {
-    width: 63px;
-    height: 63px;
-    display: block;
-    border-radius: 8px;
-  }
+.mosaic__card--left,
+.mosaic__card--right {
+  width: 35vw;
+}
 
-  /* heading centered and responsive */
-  .chr-chrome-hero__heading {
-    margin: 0;
-    font-size: clamp(1.8rem, 4.5vw, 3.6rem); /* responsive scaling */
-    line-height: 1.02;
-    font-weight: 800;
-    color: #0f1720;
-  }
+.mosaic__card--extra {
+  width: 22vw;
+  opacity: 0;
+  visibility: hidden;
+}
 
-  /* download button styled like header links but primary */
-  .chr-download-button,
-  .chr-simplified-download-wrapper button {
-    background: var(--primary);
-    color: var(--on-primary);
-    border-radius: 12px;
-    padding: 10px 18px;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 6px 18px rgba(26, 115, 232, 0.18);
-    transition: transform 160ms ease, box-shadow 160ms ease;
-  }
-  .chr-download-button:active,
-  .chr-simplified-download-wrapper button:active {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* mosaic wrapper: centered with exact width */
-  .chr-mosaic {
-    position: relative;
-    width: 100%;
-    max-width: var(--container-width);
-    margin: 36px auto 12px; /* lowered and centered */
-    overflow: hidden;
-    touch-action: pan-y;
-  }
-
-  .chr-mosaic__track {
-    display: flex;
-    gap: var(--mosaic-gap);
-    align-items: flex-start;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-  }
-
-  .mosaic-card {
-    flex: 0 0 auto;
-    border-radius: 14px;
-    box-shadow: 0 12px 40px rgba(20, 30, 60, 0.08);
-    background: linear-gradient(180deg, #fff, #fbfdff);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform-origin: center center;
-    height: var(--card-height);
-  }
-
-  .mosaic-card--left,
-  .mosaic-card--right {
-    width: 260px;
-  }
-  .mosaic-card--center {
-    width: calc(var(--center-height) * (727 / 444));
-    height: var(--center-height);
-    transform: translateY(30px) scale(1.06);
-    z-index: 2;
-  }
-  .mosaic-card--extra {
-    width: 420px;
-    height: 320px;
-  }
-
-  /* spacer used for mapping the scroll -> animation */
-  .chr-mosaic-spacer {
-    height: var(--spacer-height);
-  }
-
-  /* tablet: static, no scrub, cards stack/stretch */
-  @media (max-width: 1024px) {
-    min-height: auto;
-    padding: 40px 0;
-
-    .chr-mosaic {
-      margin: 24px auto;
-      max-width: 92%;
-    }
-    .chr-mosaic__track {
-      transform: none !important;
-      gap: 20px;
-    }
-    .mosaic-card,
-    .mosaic-card--center,
-    .mosaic-card--left,
-    .mosaic-card--right,
-    .mosaic-card--extra {
-      width: 100%;
-      height: 220px;
-      transform: none !important;
-    }
-    .chr-mosaic-spacer {
-      height: 60px;
-    }
-  }
-
-  /* mobile: hide mosaic, show video (video block default hidden) */
-  @media (max-width: 600px) {
-    .chr-mosaic {
-      display: none;
-    }
-    .chr-hero-video {
-      display: block;
-      margin-top: 12px;
-    }
-    min-height: auto;
-    padding: 20px 0;
-  }
-
-  /* reduce-motion */
-  @media (prefers-reduced-motion: reduce) {
-    .chr-mosaic__track {
-      transition: none !important;
-      transform: none !important;
-      will-change: auto !important;
-    }
+@include respond-to('tablet') {
+  .mosaic__card {
+    height: 300px;
   }
 }
 
-/* ensure inline svgs/images fill card area */
-.mosaic-card svg,
-.mosaic-card img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+@include respond-to('mobile') {
+  .mosaic {
+    display: none;
+  }
+  .hero__video {
+    display: block;
+  }
 }
