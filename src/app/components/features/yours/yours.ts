@@ -57,19 +57,15 @@ export class Yours implements AfterViewInit, OnDestroy {
           gsap.matchMedia().add(
             {
               // On définit nos breakpoints
-              isDesktop: '(min-width: 769px)', // Breakpoint où l'anim "take-over" s'active
-              isMobile: '(max-width: 768px)', // Breakpoint où elle est cachée
+              isDesktop: '(min-width: 769px)',
+              isMobile: '(max-width: 768px)',
             },
             (context) => {
               const { isDesktop } = context.conditions as any;
 
-              // --- Anim 1 : Le "Pill" (tourne partout) ---
               this.initPillAnimation(scroller);
 
               if (isDesktop) {
-                // --- Anim 2 : Le "Take Over" (desktop UNIQUEMENT) ---
-                // Si on est sur mobile, ce code n'est JAMAIS appelé.
-                // Donc ScrollTrigger ne pète pas sur un élément en display:none.
                 this.initTakeOverAnimation(scroller);
               }
             }

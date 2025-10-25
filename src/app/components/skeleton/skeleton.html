@@ -1,7 +1,7 @@
 <!-- Skeleton Placeholder -->
 <div class="skeleton" [attr.data-type]="type">
+  @if (type === 'login-ui') {
   <svg
-    *ngIf="type === 'login-ui'"
     viewBox="0 0 260 420"
     xmlns="http://www.w3.org/2000/svg"
     role="img"
@@ -27,9 +27,8 @@
       Login UI
     </text>
   </svg>
-
+  } @else if (type === 'search-ui') {
   <svg
-    *ngIf="type === 'search-ui'"
     viewBox="0 0 727 444"
     xmlns="http://www.w3.org/2000/svg"
     role="img"
@@ -55,9 +54,8 @@
       Search UI
     </text>
   </svg>
-
+  } @else if (type === 'dark-mode-ui') {
   <svg
-    *ngIf="type === 'dark-mode-ui'"
     viewBox="0 0 727 444"
     xmlns="http://www.w3.org/2000/svg"
     role="img"
@@ -70,8 +68,8 @@
       </linearGradient>
     </defs>
     <rect width="727" height="444" rx="14" fill="url(#s3)" />
-    <rect x="28" y="28" width="671" height="52" rx="10" fill="#fffff" opacity="0.2" />
-    <rect x="28" y="100" width="671" height="300" rx="10" fill="#fffff" opacity="0.1" />
+    <rect x="28" y="28" width="671" height="52" rx="10" fill="#ffffff" opacity="0.2" />
+    <rect x="28" y="100" width="671" height="300" rx="10" fill="#ffffff" opacity="0.1" />
     <text
       x="50%"
       y="50%"
@@ -83,4 +81,5 @@
       Dark Mode
     </text>
   </svg>
+  }
 </div>

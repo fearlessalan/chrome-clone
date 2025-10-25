@@ -20,20 +20,15 @@
       <div class="take-over-sticky-content">
         <div class="animation-wrapper" #animationWrapper>
           <div class="animation-mask">
-            <!-- CALQUE 1 : Le fond (simple couleur) -->
             <div class="take-over-image background-image"></div>
 
-            <!-- CALQUE 2 : La capture "Light Mode" -->
             <div class="take-over-image first-capture">
-              <!-- NOUVEAU CONTENEUR pour centrer et limiter la taille du skeleton -->
               <div class="skeleton-viewport">
                 <app-skeleton type="search-ui"></app-skeleton>
               </div>
             </div>
 
-            <!-- CALQUE 3 : La capture "Dark Mode" -->
             <div class="take-over-image second-capture">
-              <!-- On utilise le même conteneur ici -->
               <div class="skeleton-viewport">
                 <app-skeleton type="dark-mode-ui"></app-skeleton>
               </div>
@@ -43,7 +38,7 @@
       </div>
     </div>
   </div>
-  <!-- Ce conteneur sera le seul visible sur mobile -->
+  s
   <div class="timed-accordion-block">
     <app-timed-accordion></app-timed-accordion>
   </div>
