@@ -1,5 +1,4 @@
-/* Fichier : features.scss mis à jour pour le sticky */
-@use '@angular/material' as mat;
+@use '../../../styles/mixins' as *;
 
 :host {
   --primary-color-soft-bg: #e8f0fe;
@@ -12,62 +11,66 @@
   gap: 2rem;
   padding-top: 4rem;
   padding-bottom: 4rem;
-  position: relative; // Contexte de positionnement
+  position: relative;
 }
 
-// La barre de navigation
 .app-features-nav {
   position: sticky;
-  top: 20px;
+  top: 7vh;
   z-index: 10;
-
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.app-features-nav__list {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  list-style: none;
-  margin: 0;
   padding: 0.5rem;
   border-radius: 99px;
   background-color: #f1f3f4;
-  // On ajoute une petite ombre pour l'effet "flottant"
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: top 0.3s ease-in-out;
+}
+
+.app-features-nav__list {
+  position: relative;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-features-nav__glider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #e8f0fe;
+  border-radius: 99px;
+  z-index: 0;
 }
 
 .app-features-nav__link {
+  position: relative;
+  z-index: 1;
   padding: 0.75rem 1.25rem;
   border-radius: 99px;
   text-decoration: none;
   font-weight: 500;
-  color: var(--text-color-muted);
-  transition: all 0.2s ease-in-out;
+  color: #5f6368;
+  transition: color 0.2s ease-in-out;
 
   &.is-active {
-    background-color: var(--primary-color-soft-bg);
-    color: var(--primary-color);
+    color: var(--color-primary);
   }
+}
 
-  &:not(.is-active):hover {
-    background-color: #e8eaed;
-  }
+.app-features-nav__cta-container {
+  margin-left: 0.5rem;
 }
 
 .app-features-nav__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: var(--primary-color);
-  color: var(--primary-color-text);
-  border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--button-border-radius);
-  font-weight: 700;
-  cursor: pointer;
+  font-weight: 500;
 
   mat-icon {
     width: 1rem;
@@ -75,7 +78,90 @@
     font-size: 1rem;
   }
 }
+.app-features-nav__mobile-toggle {
+  display: none;
+}
 
 .app-features-content {
   width: 100%;
+}
+
+@include respond-to('mobile') {
+  .app-features-nav {
+    top: auto;
+    bottom: 1rem;
+    position: fixed;
+    width: calc(100% - 2rem);
+    left: 1rem;
+    right: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s var(--ease-standard);
+    &.is-visible-on-mobile {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  .app-features-nav__list {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 12px;
+    padding: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    background-color: var(--color-bg);
+
+    &.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  .app-features-nav__glider {
+    display: none;
+  }
+
+  .app-features-nav__link {
+    display: block;
+    text-align: center;
+    &.is-active {
+      background-color: var(--primary-color-soft-bg);
+    }
+  }
+
+  .app-features-nav__mobile-toggle {
+    display: block;
+    flex-grow: 1;
+
+    button {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      border-radius: 99px;
+      background-color: #f1f3f4;
+      border: none;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1a73e8;
+      text-transform: capitalize;
+    }
+  }
+
+  .app-features-nav {
+    .app-features-nav__cta-container {
+      margin-left: 0.5rem;
+    }
+  }
 }

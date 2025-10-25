@@ -151,6 +151,12 @@ button,
 .btn-primary {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
+  padding: 12px 26px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
 }
 
 .btn-primary:hover {

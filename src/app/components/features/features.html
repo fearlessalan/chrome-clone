@@ -1,65 +1,68 @@
-<!-- Fichier : features.html corrigé -->
-
 <div class="app-features-root container" #root>
-  <!-- La barre de navigation, maintenant en haut -->
-  <nav class="app-features-nav" aria-label="Navigation des fonctionnalités">
-    <ul class="app-features-nav__list">
+  <nav class="app-features-nav" #navContainer aria-label="Navigation des fonctionnalités">
+    <div class="app-features-nav__mobile-toggle">
+      <button type="button" (click)="toggleMobileMenu()">
+        <span>{{ activeAnchor() }}</span>
+        <mat-icon>unfold_more</mat-icon>
+      </button>
+    </div>
+    <ul class="app-features-nav__list" #navList [class.is-open]="isMobileMenuOpen()">
+      <li class="app-features-nav__glider" #glider></li>
       <li class="app-features-nav__item">
         <a
           href="#updates"
           class="app-features-nav__link"
-          [class.is-active]="activeAnchor() === 'updates'"
+          [class.is-active]="isActive('updates')"
+          (click)="closeMobileMenu()"
+          >Mises à jour</a
         >
-          Mises à jour
-        </a>
       </li>
       <li class="app-features-nav__item">
         <a
           href="#yours"
           class="app-features-nav__link"
-          [class.is-active]="activeAnchor() === 'yours'"
+          [class.is-active]="isActive('yours')"
+          (click)="closeMobileMenu()"
+          >À vous</a
         >
-          À vous
-        </a>
       </li>
       <li class="app-features-nav__item">
         <a
           href="#safe"
           class="app-features-nav__link"
-          [class.is-active]="activeAnchor() === 'safe'"
+          [class.is-active]="isActive('safe')"
+          (click)="closeMobileMenu()"
+          >Sécurisé</a
         >
-          Sécurisé
-        </a>
       </li>
       <li class="app-features-nav__item">
         <a
           href="#fast"
           class="app-features-nav__link"
-          [class.is-active]="activeAnchor() === 'fast'"
+          [class.is-active]="isActive('fast')"
+          (click)="closeMobileMenu()"
+          >Rapide</a
         >
-          Rapide
-        </a>
       </li>
       <li class="app-features-nav__item">
         <a
           href="#by-google"
           class="app-features-nav__link"
-          [class.is-active]="activeAnchor() === 'by-google'"
+          [class.is-active]="isActive('by-google')"
+          (click)="closeMobileMenu()"
+          >Par Google</a
         >
-          Par Google
-        </a>
-      </li>
-      <li class="app-features-nav__item app-features-nav__item--cta">
-        <button type="button" class="app-features-nav__cta">
-          Télécharger
-          <mat-icon>download</mat-icon>
-          <!-- On utilise MatIcon, c'est plus propre -->
-        </button>
       </li>
     </ul>
+
+    <div class="app-features-nav__cta-container">
+      <button class="btn-primary">
+        Télécharger
+        <mat-icon>download</mat-icon>
+      </button>
+    </div>
   </nav>
 
-  <!-- Le contenu des sections, ça ne change pas -->
   <div class="app-features-content">
     <app-updates id="updates"></app-updates>
     <app-yours id="yours"></app-yours>
