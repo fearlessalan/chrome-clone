@@ -1,30 +1,42 @@
 :host {
   display: block;
-  width: 100%;
+  height: 100%; /* important => host remplit la hauteur fournie par .mosaic__card */
+  width: auto;
 }
 
+/* wrapper qui porte le ratio si tu veux garder aspect-ratio fallback */
 .skeleton {
-  display: flex;
+  display: block;
+  height: 100%; /* remplit la hauteur de la card */
+  width: auto; /* largeur calculée automatiquement par l'élément fils (svg/img) */
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--color-surface);
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-
-  svg {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-soft);
-    background: var(--color-surface);
-  }
-
-  text {
-    user-select: none;
-    pointer-events: none;
-    font-weight: 600;
-  }
 }
 
-/* Petits ajustements de ratio selon type */
+/* TRAITE LE SVG COMME UNE IMG : hauteur = 100%, largeur auto */
+.skeleton svg,
+.skeleton img {
+  display: block;
+  height: 100%; /* remplit la hauteur */
+  width: auto; /* la largeur dépendra du ratio natif */
+  max-width: 100%; /* sécurité responsive */
+  border-radius: inherit;
+  box-shadow: var(--shadow-soft);
+  object-fit: contain; /* pas de crop inattendu */
+}
+
+/* Texte & accessibilité interne */
+.skeleton text {
+  user-select: none;
+  pointer-events: none;
+  font-weight: 600;
+}
+
+/* Conserves tes aspect-ratio comme fallback si un user-agent ne gère pas autrement */
 .skeleton[data-type='login-ui'],
 .skeleton[data-type='dark-mode-ui'] {
   aspect-ratio: 260 / 420;
@@ -34,11 +46,10 @@
   aspect-ratio: 727 / 444;
 }
 
-/* Responsive adaptation */
+/* responsive minor */
 @media (max-width: 900px) {
-  .skeleton {
-    svg {
-      border-radius: 10px;
-    }
+  .skeleton svg,
+  .skeleton img {
+    border-radius: 10px;
   }
 }

@@ -24,22 +24,24 @@
   </div>
 
   <div class="mosaic" #mosaic>
-    <div class="mosaic__track" #track>
-      <article class="mosaic__card mosaic__card--left">
-        <app-skeleton type="search-ui"></app-skeleton>
-      </article>
-      <article class="mosaic__card mosaic__card--extra">
-        <app-skeleton type="login-ui"></app-skeleton>
-      </article>
-      <article class="mosaic__card mosaic__card--center">
-        <app-skeleton type="search-ui"></app-skeleton>
-      </article>
-      <article class="mosaic__card mosaic__card--extra">
-        <app-skeleton type="login-ui"></app-skeleton>
-      </article>
-      <article class="mosaic__card mosaic__card--right">
-        <app-skeleton type="search-ui"></app-skeleton>
-      </article>
+    <div class="mosaic__scaler">
+      <div class="mosaic__track" #track>
+        <article class="mosaic__card mosaic__card--left">
+          <app-skeleton type="search-ui"></app-skeleton>
+        </article>
+        <article class="mosaic__card mosaic__card--extra">
+          <app-skeleton type="login-ui"></app-skeleton>
+        </article>
+        <article class="mosaic__card mosaic__card--center">
+          <app-skeleton type="search-ui"></app-skeleton>
+        </article>
+        <article class="mosaic__card mosaic__card--extra">
+          <app-skeleton type="login-ui"></app-skeleton>
+        </article>
+        <article class="mosaic__card mosaic__card--right">
+          <app-skeleton type="search-ui"></app-skeleton>
+        </article>
+      </div>
     </div>
   </div>
 </section>

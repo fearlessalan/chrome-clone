@@ -55,32 +55,58 @@ export class Hero implements AfterViewInit, OnDestroy {
   }
 
   private waitForImages(): void {
-    const imgs = Array.from(this.trackRef.nativeElement.querySelectorAll('img'));
-    if (!imgs.length) {
+    const trackEl = this.trackRef.nativeElement as HTMLElement;
+
+    // On récupère séparément les images <img>, les <picture> (qui peuvent contenir <img>) et les svg inline
+    const imgs = Array.from(trackEl.querySelectorAll('img')) as HTMLImageElement[];
+    const pictures = Array.from(trackEl.querySelectorAll('picture')) as HTMLPictureElement[];
+    const svgs = Array.from(trackEl.querySelectorAll('svg')) as SVGElement[];
+
+    // Si on a que des SVG inline (déjà dans le DOM) => pas d'attente, on refresh tout de suite
+    if (imgs.length === 0 && pictures.length === 0) {
       ScrollTrigger.refresh();
       return;
     }
 
-    let loaded = 0;
-    const onImageLoad = () => {
-      loaded++;
-      if (loaded === imgs.length) {
+    let pending = 0;
+    const markLoaded = () => {
+      pending--;
+      if (pending <= 0) {
+        // refresh hors Angular
         this.ngZone.runOutsideAngular(() => ScrollTrigger.refresh());
       }
     };
 
-    imgs.forEach((i) => {
-      if (i.complete) onImageLoad();
-      else i.addEventListener('load', onImageLoad, { once: true });
+    const attachToImg = (img: HTMLImageElement) => {
+      // si déjà chargé -> pas besoin d'attacher d'écoute
+      if (img.complete && img.naturalWidth !== 0) return;
+      pending++;
+      img.addEventListener('load', markLoaded, { once: true });
+      img.addEventListener('error', markLoaded, { once: true });
+    };
+
+    // imgs directs
+    imgs.forEach(attachToImg);
+
+    // picture -> on cherche <img> à l'intérieur
+    pictures.forEach((p) => {
+      const img = p.querySelector('img');
+      if (img) attachToImg(img as HTMLImageElement);
     });
+
+    // si aucun listener ajouté (ex: tous les imgs already complete) -> refresh direct
+    if (pending === 0) {
+      this.ngZone.runOutsideAngular(() => ScrollTrigger.refresh());
+    }
   }
 
   private setupAnimations(): void {
+    // ========================================================================
+    // SECTION 1 : SETUP & RÉCUPÉRATION DES ÉLÉMENTS
+    // ========================================================================
+
     const scroller = this.elementRef.nativeElement.closest('.main-scroll-container');
-    if (!scroller) {
-      console.error('Le conteneur de scroll ".main-scroll-container" n_a pas été trouvé.');
-      return;
-    }
+    if (!scroller) return;
 
     const headline = this.headlineRef.nativeElement;
     const mosaic = this.mosaicRef.nativeElement;
@@ -88,15 +114,35 @@ export class Hero implements AfterViewInit, OnDestroy {
     const videoWrapper = this.videoWrapperRef?.nativeElement;
     const cards = gsap.utils.toArray<HTMLElement>(track.querySelectorAll('.mosaic__card'));
 
-    gsap.set(headline, { autoAlpha: 1, y: 0 });
-    gsap.set(cards, {
-      autoAlpha: 1,
-      y: (i) => (i % 2 === 0 ? -60 : 60),
-      scale: 1,
+    const firstCard = cards[0];
+    const secondCard = cards[1];
+
+    // ========================================================================
+    // SECTION 2 : DÉFINITION DE L'ÉTAT INITIAL (AVANT TOUTE ANIMATION)
+    // C'est ici que vous ajustez les positions de départ.
+    // ========================================================================
+
+    // Décalage vertical initial pour la plupart des cartes (alternance haut/bas).
+    const cardsExceptSecond = cards.filter((c) => c !== secondCard);
+    gsap.set(cardsExceptSecond, {
+      y: (i) => (i % 2 === 0 ? -120 : 20),
+    });
+
+    gsap.set(firstCard, {
+      x: 365,
+    });
+
+    gsap.set(secondCard, {
+      autoAlpha: 0,
+      y: 2000,
     });
 
     const computeMaxTranslate = () =>
       track.scrollWidth - mosaic.clientWidth + window.innerWidth * 0.15;
+
+    // ========================================================================
+    // SECTION 3 : LOGIQUE RESPONSIVE & CRÉATION DE LA TIMELINE
+    // ========================================================================
 
     gsap.matchMedia(this.ctx).add(
       {
@@ -115,25 +161,53 @@ export class Hero implements AfterViewInit, OnDestroy {
             scrollTrigger: {
               trigger: mosaic,
               scroller: scroller,
-              scrub: 1.5,
-              start: 'top bottom',
-              end: 'bottom center',
+              scrub: 1.2,
+              start: 'top 80%',
+              end: 'bottom 20%',
 
               invalidateOnRefresh: true,
             },
           });
 
-          tl.to(cards, {
-            y: 0,
-            ease: 'power2.inOut',
-          }).to(
-            track,
+          // ========================================================================
+          // SECTION 4 : LA CHORÉGRAPHIE DE L'ANIMATION (LA TIMELINE)
+          // C'est ici que vous définissez l'ordre et le timing des mouvements.
+          // ========================================================================
+          tl.to(
+            cards.filter((c) => c !== secondCard),
             {
-              x: () => -computeMaxTranslate(),
-              ease: 'none',
-            },
-            '>-0.2'
-          );
+              y: 0,
+              ease: 'power2.inOut',
+              duration: 1,
+            }
+          )
+            .to(
+              firstCard,
+              {
+                x: '-4%',
+                ease: 'power2.inOut',
+                duration: 1,
+              },
+              '<'
+            )
+            .to(
+              secondCard,
+              {
+                autoAlpha: 1,
+                y: 0,
+                ease: 'power2.out',
+                duration: 1,
+              },
+              '<'
+            )
+            .to(
+              track,
+              {
+                x: () => -computeMaxTranslate(),
+                ease: 'none',
+              },
+              '>-0.5'
+            );
         } else if (isTablet) {
           if (videoWrapper) videoWrapper.hidden = true;
           mosaic.style.display = 'block';
