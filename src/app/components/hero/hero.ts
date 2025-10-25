@@ -57,12 +57,10 @@ export class Hero implements AfterViewInit, OnDestroy {
   private waitForImages(): void {
     const trackEl = this.trackRef.nativeElement as HTMLElement;
 
-    // On récupère séparément les images <img>, les <picture> (qui peuvent contenir <img>) et les svg inline
     const imgs = Array.from(trackEl.querySelectorAll('img')) as HTMLImageElement[];
     const pictures = Array.from(trackEl.querySelectorAll('picture')) as HTMLPictureElement[];
     const svgs = Array.from(trackEl.querySelectorAll('svg')) as SVGElement[];
 
-    // Si on a que des SVG inline (déjà dans le DOM) => pas d'attente, on refresh tout de suite
     if (imgs.length === 0 && pictures.length === 0) {
       ScrollTrigger.refresh();
       return;
@@ -72,13 +70,11 @@ export class Hero implements AfterViewInit, OnDestroy {
     const markLoaded = () => {
       pending--;
       if (pending <= 0) {
-        // refresh hors Angular
         this.ngZone.runOutsideAngular(() => ScrollTrigger.refresh());
       }
     };
 
     const attachToImg = (img: HTMLImageElement) => {
-      // si déjà chargé -> pas besoin d'attacher d'écoute
       if (img.complete && img.naturalWidth !== 0) return;
       pending++;
       img.addEventListener('load', markLoaded, { once: true });
@@ -87,24 +83,17 @@ export class Hero implements AfterViewInit, OnDestroy {
 
     // imgs directs
     imgs.forEach(attachToImg);
-
-    // picture -> on cherche <img> à l'intérieur
     pictures.forEach((p) => {
       const img = p.querySelector('img');
       if (img) attachToImg(img as HTMLImageElement);
     });
 
-    // si aucun listener ajouté (ex: tous les imgs already complete) -> refresh direct
     if (pending === 0) {
       this.ngZone.runOutsideAngular(() => ScrollTrigger.refresh());
     }
   }
 
   private setupAnimations(): void {
-    // ========================================================================
-    // SECTION 1 : SETUP & RÉCUPÉRATION DES ÉLÉMENTS
-    // ========================================================================
-
     const scroller = this.elementRef.nativeElement.closest('.main-scroll-container');
     if (!scroller) return;
 
@@ -118,30 +107,27 @@ export class Hero implements AfterViewInit, OnDestroy {
     const secondCard = cards[1];
 
     // ========================================================================
-    // SECTION 2 : DÉFINITION DE L'ÉTAT INITIAL (AVANT TOUTE ANIMATION)
-    // C'est ici que vous ajustez les positions de départ.
+    // SECTION 2 : ÉTAT INITIAL ROBUSTE
     // ========================================================================
-
-    // Décalage vertical initial pour la plupart des cartes (alternance haut/bas).
-    const cardsExceptSecond = cards.filter((c) => c !== secondCard);
-    gsap.set(cardsExceptSecond, {
-      y: (i) => (i % 2 === 0 ? -120 : 20),
+    const initialVisibleCards = cards.filter((c) => c !== secondCard);
+    gsap.set(initialVisibleCards, {
+      y: (i) => (i % 2 === 0 ? -60 : 60),
     });
 
     gsap.set(firstCard, {
-      x: 365,
+      x: '20vw',
     });
 
     gsap.set(secondCard, {
       autoAlpha: 0,
-      y: 2000,
+      y: '100vh',
     });
 
     const computeMaxTranslate = () =>
       track.scrollWidth - mosaic.clientWidth + window.innerWidth * 0.15;
 
     // ========================================================================
-    // SECTION 3 : LOGIQUE RESPONSIVE & CRÉATION DE LA TIMELINE
+    // SECTION 3 : LOGIQUE RESPONSIVE (AVEC LE NOUVEAU MOBILE)
     // ========================================================================
 
     gsap.matchMedia(this.ctx).add(
@@ -155,7 +141,13 @@ export class Hero implements AfterViewInit, OnDestroy {
 
         if (isDesktop) {
           if (videoWrapper) videoWrapper.hidden = true;
-          mosaic.style.display = 'block';
+          mosaic.style.display = 'flex';
+
+          // On définit l'état initial UNIQUEMENT pour le desktop
+          const initialVisibleCards = cards.filter((c) => c !== secondCard);
+          gsap.set(initialVisibleCards, { y: (i) => (i % 2 === 0 ? -60 : 60) });
+          gsap.set(firstCard, { x: '20vw' });
+          gsap.set(secondCard, { autoAlpha: 0, y: '100vh' });
 
           const tl = gsap.timeline({
             scrollTrigger: {
@@ -164,59 +156,38 @@ export class Hero implements AfterViewInit, OnDestroy {
               scrub: 1.2,
               start: 'top 80%',
               end: 'bottom 20%',
-
               invalidateOnRefresh: true,
             },
           });
 
-          // ========================================================================
-          // SECTION 4 : LA CHORÉGRAPHIE DE L'ANIMATION (LA TIMELINE)
-          // C'est ici que vous définissez l'ordre et le timing des mouvements.
-          // ========================================================================
-          tl.to(
-            cards.filter((c) => c !== secondCard),
-            {
-              y: 0,
-              ease: 'power2.inOut',
-              duration: 1,
-            }
-          )
-            .to(
-              firstCard,
-              {
-                x: '-4%',
-                ease: 'power2.inOut',
-                duration: 1,
-              },
-              '<'
-            )
-            .to(
-              secondCard,
-              {
-                autoAlpha: 1,
-                y: 0,
-                ease: 'power2.out',
-                duration: 1,
-              },
-              '<'
-            )
-            .to(
-              track,
-              {
-                x: () => -computeMaxTranslate(),
-                ease: 'none',
-              },
-              '>-0.5'
-            );
+          tl.to(initialVisibleCards, { y: 0, ease: 'power2.inOut', duration: 1 })
+            .to(firstCard, { x: 0, ease: 'power2.inOut', duration: 1 }, '<')
+            .to(secondCard, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: 1 }, '<')
+            .to(track, { x: () => -computeMaxTranslate(), ease: 'none' }, '>-0.5');
         } else if (isTablet) {
           if (videoWrapper) videoWrapper.hidden = true;
           mosaic.style.display = 'block';
           gsap.set([track, cards, headline], { clearProps: 'all' });
         } else if (isMobile) {
-          if (videoWrapper) videoWrapper.hidden = false;
-          mosaic.style.display = 'none';
-          const v = videoWrapper?.querySelector('video');
-          v?.play().catch(() => {});
+          if (videoWrapper) videoWrapper.hidden = true;
+          mosaic.style.display = 'flex';
+
+          gsap.set([track, ...cards], { clearProps: 'all' });
+          gsap.set([cards[0], cards[1], cards[2]], { autoAlpha: 1 });
+          gsap.set(cards.slice(3), { autoAlpha: 0 });
+
+          gsap.delayedCall(0.05, () => {
+            const secondCardEl = secondCard as HTMLElement;
+            if (secondCardEl.offsetWidth === 0) {
+              console.warn(
+                'La carte n°2 a une largeur de 0, le calcul de centrage pourrait être incorrect.'
+              );
+              return;
+            }
+            const offset =
+              window.innerWidth / 2 - (secondCardEl.offsetLeft + secondCardEl.offsetWidth / 2);
+            gsap.set(track, { x: offset });
+          });
         }
       }
     );
