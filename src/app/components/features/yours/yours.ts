@@ -10,14 +10,15 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+import ScrollTrigger from 'gsap/ScrollTrigger'; // On garde l'import v0
 import { TimedAccordion } from './timed-accordion/timed-accordion';
 import { KeyframeAnimation } from './keyframe-animation/keyframe-animation';
+import { Skeleton } from '../../skeleton/skeleton';
 
 @Component({
   selector: 'app-yours',
   standalone: true,
-  imports: [CommonModule, TimedAccordion, KeyframeAnimation],
+  imports: [CommonModule, TimedAccordion, KeyframeAnimation, Skeleton],
   templateUrl: './yours.html',
   styleUrls: ['./yours.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,30 +33,66 @@ export class Yours implements AfterViewInit, OnDestroy {
   private ngZone = inject(NgZone);
   private ctx?: gsap.Context;
 
+  readonly pillText = 'Personnalisez-le'.split('');
+
   constructor() {
-    gsap.registerPlugin(ScrollTrigger);
+    // On garde ton register v0, mais avec un check SSR
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
   }
 
   ngAfterViewInit(): void {
+    // On garde ton hack, mais on le rend plus robuste
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
+        // <--- Ton timeout est là, G.
         this.ctx = gsap.context(() => {
           const scroller = this.elementRef.nativeElement.closest('.main-scroll-container');
-          if (!scroller) return;
-          this.initPillAnimation(scroller);
-          this.initTakeOverAnimation(scroller);
+          if (!scroller) {
+            console.warn('Scroller .main-scroll-container non trouvé.');
+            return;
+          }
+
+          // ==================================================================
+          // LE BLINDAGE OBLIGATOIRE : matchMedia
+          // ==================================================================
+          gsap.matchMedia().add(
+            {
+              // On définit nos breakpoints
+              isDesktop: '(min-width: 769px)', // Breakpoint où l'anim "take-over" s'active
+              isMobile: '(max-width: 768px)', // Breakpoint où elle est cachée
+            },
+            (context) => {
+              const { isDesktop } = context.conditions as any;
+
+              // --- Anim 1 : Le "Pill" (tourne partout) ---
+              this.initPillAnimation(scroller);
+
+              if (isDesktop) {
+                // --- Anim 2 : Le "Take Over" (desktop UNIQUEMENT) ---
+                // Si on est sur mobile, ce code n'est JAMAIS appelé.
+                // Donc ScrollTrigger ne pète pas sur un élément en display:none.
+                this.initTakeOverAnimation(scroller);
+              }
+            }
+          );
+
+          // On rafraîchit une fois que tout est set up
           ScrollTrigger.refresh();
         }, this.sectionRef.nativeElement);
-      }, 100);
+      }, 100); // <--- On garde tes 100ms
     });
   }
 
   ngOnDestroy(): void {
+    // Le .revert() va clean le contexte, y compris le matchMedia. Propre.
     this.ctx?.revert();
   }
 
   private initPillAnimation(scroller: Element): void {
     const pill = this.pillRef.nativeElement;
+    // On garde ta logique v0
     ScrollTrigger.create({
       trigger: pill,
       scroller: scroller,
@@ -69,6 +106,7 @@ export class Yours implements AfterViewInit, OnDestroy {
     const stickyContainer = this.stickyContainerRef.nativeElement;
     const animationWrapper = this.animationWrapperRef.nativeElement;
 
+    // On garde ta timeline v0
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: stickyContainer,
@@ -79,15 +117,12 @@ export class Yours implements AfterViewInit, OnDestroy {
       },
     });
 
-    // SÉQUENCE 1 (0% -> 30% du scroll) : Zoom du masque pour remplir l'écran.
+    // SÉQUENCE 1 : Zoom + Fade Titre
     tl.to(animationWrapper, {
       '--mask-scale': 4,
       '--mask-radius': 0,
-      duration: 0.3, // Correspond à 30% de la timeline
-    });
-
-    // Le titre disparaît pendant le zoom.
-    tl.to(
+      duration: 0.3,
+    }).to(
       animationWrapper,
       {
         '--title-translate-y': '-50px',
@@ -95,28 +130,27 @@ export class Yours implements AfterViewInit, OnDestroy {
         duration: 0.2,
       },
       0.1
-    ); // Positionné à 10% de la timeline
+    );
 
-    // SÉQUENCE 2 (30% -> 65% du scroll) : Révélation verticale de la première capture.
+    // SÉQUENCE 2 : Révélation UI 1
     tl.to(
       animationWrapper,
       {
         '--first-image-clip': 0,
-        duration: 0.35, // Durée de 35% (65% - 30%)
+        '--bg-opacity': 0,
+        duration: 0.35,
       },
       0.3
-    ); // Commence à 30% de la timeline
+    );
 
-    // SÉQUENCE 3 (65% -> 100% du scroll) : Révélation verticale de la deuxième capture.
+    // SÉQUENCE 3 : Révélation UI 2
     tl.to(
       animationWrapper,
       {
         '--second-image-clip': 0,
-        duration: 0.35, // Durée de 35% (100% - 65%)
+        duration: 0.35,
       },
       0.65
-    ); // Commence à 65% de la timeline
+    );
   }
-
-  readonly pillText = 'Personnalisez-le'.split('');
 }

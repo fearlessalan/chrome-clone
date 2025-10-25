@@ -2,102 +2,52 @@
   <div class="container">
     <h2 class="yours-title">
       <span class="pill-wrapper" #pill>
-        <span class="pill">
-          <span
-            *ngFor="let char of pillText; let i = index"
-            class="pill-char"
-            [style.--animation-delay.ms]="i * 20"
-          >
-            {{ char }}
+        <span class="pill" aria-hidden="true">
+          @for (char of pillText; track $index) {
+          <span class="pill-char" [style.--animation-delay.ms]="$index * 20">
+            {{ char === ' ' ? '&nbsp;' : char }}
           </span>
+          }
         </span>
       </span>
+      <br />
       et emportez-le partout
     </h2>
   </div>
 
-  <div class="take-over-container" #stickyContainer>
-    <div class="take-over-sticky-content">
-      <div class="animation-wrapper" #animationWrapper>
-        <!-- Le masque qui va zoomer et contenir TOUS les calques -->
-        <div class="animation-mask">
-          <!-- CALQUE 1 : Le fond d'écran initial (qui sera aussi celui de la capture Light) -->
-          <svg
-            class="take-over-image background-image"
-            viewBox="0 0 400 300"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="yours-bg-light" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color: #f3f9ff" />
-                <stop offset="100%" style="stop-color: #e6f0ff" />
-              </linearGradient>
-            </defs>
-            <rect width="400" height="300" fill="url(#yours-bg-light)" />
-          </svg>
+  <div class="take-over-wrapper">
+    <div class="take-over-container" #stickyContainer>
+      <div class="take-over-sticky-content">
+        <div class="animation-wrapper" #animationWrapper>
+          <div class="animation-mask">
+            <!-- CALQUE 1 : Le fond (simple couleur) -->
+            <div class="take-over-image background-image"></div>
 
-          <!-- CALQUE 2 : La capture "Light Mode" qui sera révélée verticalement -->
-          <svg
-            class="take-over-image first-capture"
-            viewBox="0 0 400 300"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden="true"
-          >
-            <rect width="400" height="300" rx="12" fill="url(#yours-bg-light)" />
-            <rect x="16" y="16" width="368" height="40" rx="8" fill="#fff" opacity="0.9" />
-            <rect x="16" y="72" width="368" height="212" rx="8" fill="#fff" opacity="0.6" />
-            <text
-              x="50%"
-              y="50%"
-              dominant-baseline="middle"
-              text-anchor="middle"
-              font-family="Roboto, sans-serif"
-              font-size="22"
-              fill="#0f1720"
-              font-weight="500"
-            >
-              Light Theme UI
-            </text>
-          </svg>
+            <!-- CALQUE 2 : La capture "Light Mode" -->
+            <div class="take-over-image first-capture">
+              <!-- NOUVEAU CONTENEUR pour centrer et limiter la taille du skeleton -->
+              <div class="skeleton-viewport">
+                <app-skeleton type="search-ui"></app-skeleton>
+              </div>
+            </div>
 
-          <!-- CALQUE 3 : La capture "Dark Mode" qui prendra le relais -->
-          <svg
-            class="take-over-image second-capture"
-            viewBox="0 0 400 300"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="yours-bg-dark" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color: #0f1720" />
-                <stop offset="100%" style="stop-color: #1f2937" />
-              </linearGradient>
-            </defs>
-            <rect width="400" height="300" rx="12" fill="url(#yours-bg-dark)" />
-            <rect x="16" y="16" width="368" height="40" rx="8" fill="#0f1720" opacity="0.2" />
-            <rect x="16" y="72" width="368" height="212" rx="8" fill="#0f1720" opacity="0.1" />
-            <text
-              x="50%"
-              y="50%"
-              dominant-baseline="middle"
-              text-anchor="middle"
-              font-family="Roboto, sans-serif"
-              font-size="22"
-              fill="#e5e7eb"
-              font-weight="500"
-            >
-              Dark Theme UI
-            </text>
-          </svg>
+            <!-- CALQUE 3 : La capture "Dark Mode" -->
+            <div class="take-over-image second-capture">
+              <!-- On utilise le même conteneur ici -->
+              <div class="skeleton-viewport">
+                <app-skeleton type="dark-mode-ui"></app-skeleton>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- Ce conteneur sera le seul visible sur mobile -->
   <div class="timed-accordion-block">
     <app-timed-accordion></app-timed-accordion>
   </div>
-  <div class="keyframe-animation-block">
+  <div class="keyframe-animation-block take-over-wrapper">
     <app-keyframe-animation></app-keyframe-animation>
   </div>
 </section>

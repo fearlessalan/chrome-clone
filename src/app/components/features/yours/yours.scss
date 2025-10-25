@@ -1,53 +1,46 @@
+@use 'mixins' as *;
+
 :host {
-  // On définit les variables CSS qui seront pilotées par GSAP
   --mask-scale: 1;
   --mask-radius: 16px;
   --title-translate-y: 0px;
   --title-opacity: 1;
-  --first-image-clip: 100%; // 100% = complètement caché par le haut
-  --second-image-clip: 100%; // 100% = complètement caché par le haut
+  --first-image-clip: 100%;
+  --second-image-clip: 100%;
+  --bg-opacity: 1;
 }
 
-// Styles généraux (inchangés)
 .yours-section {
   padding: 6rem 0;
   text-align: center;
+  min-height: 100vh;
 }
 .yours-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  color: var(--text-color-base);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
   margin-bottom: 3rem;
   transform: translateY(var(--title-translate-y));
   opacity: var(--title-opacity);
 }
-
-// --- Styles pour la pilule animée "Personnalisez-le" ---
 .pill-wrapper {
   display: inline-block;
-
   .pill {
     display: inline-flex;
     padding: 0.75rem 1.5rem;
-    background-color: #fdd8d6; // Rouge clair
+    background-color: #fdd8d6;
     border-radius: 99px;
-    color: #ea4335; // Rouge Google
-    overflow: hidden; // Important pour l'animation des lettres
+    color: #ea4335;
+    overflow: hidden;
   }
-
   .pill-char {
     display: inline-block;
-    transform: translateY(110%); // Caché en bas au début
+    transform: translateY(110%);
   }
-
-  // Quand la classe .is-animated est ajoutée, on lance l'animation
   &.is-animated .pill-char {
     animation: charBounceSlideInUp 0.7s cubic-bezier(0.22, 0.9, 0.28, 1) forwards;
     animation-delay: var(--animation-delay, 0ms);
   }
 }
-
-// L'animation des lettres qui montent et rebondissent
 @keyframes charBounceSlideInUp {
   0% {
     transform: translateY(110%);
@@ -63,7 +56,6 @@
   }
 }
 
-// --- Styles pour l'animation "Take Over" ---
 .take-over-container {
   height: 300vh;
   position: relative;
@@ -87,10 +79,10 @@
   position: relative;
   width: 60vw;
   max-width: 400px;
-  aspect-ratio: 4 / 3;
   transform: scale(var(--mask-scale));
   border-radius: var(--mask-radius);
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .take-over-image {
@@ -99,20 +91,54 @@
   left: 0;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-// L'astuce est là : on révèle les images par le haut en animant la première valeur de `inset`.
+.background-image {
+  position: relative;
+  display: block;
+  background-color: #2e70b3;
+  aspect-ratio: 727 / 444;
+  opacity: var(--bg-opacity);
+}
+
 .first-capture {
   clip-path: inset(var(--first-image-clip) 0 0 0);
 }
 .second-capture {
   clip-path: inset(var(--second-image-clip) 0 0 0);
 }
-.timed-accordion-block {
-  // On ajoute un bon espace au-dessus pour séparer les deux expériences
+
+.skeleton-viewport {
+  width: 510px;
+  height: auto;
+  margin: 0 auto;
+  transform: scale(0.6);
+
+  app-skeleton {
+    display: block;
+    width: auto;
+    max-width: 90vw;
+    height: 100%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+}
+
+.timed-accordion-block,
+.keyframe-animation-block {
   margin-top: 8rem;
 }
 
-.keyframe-animation-block {
-  margin-top: 8rem; // Pour l'espacement
+@include respond-to('mobile') {
+  .take-over-wrapper {
+    display: none;
+  }
+
+  .timed-accordion-block {
+    margin-top: 3rem;
+  }
 }
