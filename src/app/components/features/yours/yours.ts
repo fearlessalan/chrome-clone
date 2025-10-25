@@ -54,9 +54,6 @@ export class Yours implements AfterViewInit, OnDestroy {
             return;
           }
 
-          // ==================================================================
-          // LE BLINDAGE OBLIGATOIRE : matchMedia
-          // ==================================================================
           gsap.matchMedia().add(
             {
               // On définit nos breakpoints
@@ -81,7 +78,7 @@ export class Yours implements AfterViewInit, OnDestroy {
           // On rafraîchit une fois que tout est set up
           ScrollTrigger.refresh();
         }, this.sectionRef.nativeElement);
-      }, 100); // <--- On garde tes 100ms
+      }); // <--- On garde tes 100ms
     });
   }
 
@@ -126,7 +123,6 @@ export class Yours implements AfterViewInit, OnDestroy {
       animationWrapper,
       {
         '--title-translate-y': '-50px',
-        '--title-opacity': 0,
         duration: 0.2,
       },
       0.1
@@ -136,8 +132,7 @@ export class Yours implements AfterViewInit, OnDestroy {
     tl.to(
       animationWrapper,
       {
-        '--first-image-clip': 0,
-        '--bg-opacity': 0,
+        '--curtain-clip': '100%',
         duration: 0.35,
       },
       0.3

@@ -33,15 +33,10 @@
   font-weight: 600;
 }
 
-// --- LA CORRECTION EST ICI ---
-// On groupe les skeletons qui partagent le même ratio.
-
-// Ratio Portrait
 .skeleton[data-type='login-ui'] {
   aspect-ratio: 260 / 420;
 }
 
-// Ratio Paysage
 .skeleton[data-type='search-ui'],
 .skeleton[data-type='dark-mode-ui'] {
   aspect-ratio: 727 / 444;
