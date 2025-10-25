@@ -138,12 +138,12 @@ export class Hero implements AfterViewInit, OnDestroy {
       },
       (context) => {
         const { isMobile, isTablet, isDesktop } = context.conditions as any;
+        gsap.set([track, ...cards], { clearProps: 'all' });
 
         if (isDesktop) {
           if (videoWrapper) videoWrapper.hidden = true;
           mosaic.style.display = 'flex';
 
-          // On définit l'état initial UNIQUEMENT pour le desktop
           const initialVisibleCards = cards.filter((c) => c !== secondCard);
           gsap.set(initialVisibleCards, { y: (i) => (i % 2 === 0 ? -60 : 60) });
           gsap.set(firstCard, { x: '20vw' });
@@ -169,25 +169,9 @@ export class Hero implements AfterViewInit, OnDestroy {
           mosaic.style.display = 'block';
           gsap.set([track, cards, headline], { clearProps: 'all' });
         } else if (isMobile) {
+        } else if (isMobile) {
           if (videoWrapper) videoWrapper.hidden = true;
           mosaic.style.display = 'flex';
-
-          gsap.set([track, ...cards], { clearProps: 'all' });
-          gsap.set([cards[0], cards[1], cards[2]], { autoAlpha: 1 });
-          gsap.set(cards.slice(3), { autoAlpha: 0 });
-
-          gsap.delayedCall(0.05, () => {
-            const secondCardEl = secondCard as HTMLElement;
-            if (secondCardEl.offsetWidth === 0) {
-              console.warn(
-                'La carte n°2 a une largeur de 0, le calcul de centrage pourrait être incorrect.'
-              );
-              return;
-            }
-            const offset =
-              window.innerWidth / 2 - (secondCardEl.offsetLeft + secondCardEl.offsetWidth / 2);
-            gsap.set(track, { x: offset });
-          });
         }
       }
     );

@@ -52,6 +52,9 @@
   --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
   --transition-fast: 180ms var(--ease-standard);
   --transition-medium: 360ms var(--ease-standard);
+
+  --mosaic-card-height: clamp(180px, 28vmin, 420px);
+  --mosaic-track-gap-mobile: 3.5vw;
 }
 
 /* -------------------------------------------------------------------------- */
