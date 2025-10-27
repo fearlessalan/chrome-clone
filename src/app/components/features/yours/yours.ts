@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger'; // On garde l'import v0
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import { TimedAccordion } from './timed-accordion/timed-accordion';
 import { KeyframeAnimation } from './keyframe-animation/keyframe-animation';
 import { Skeleton } from '../../skeleton/skeleton';
@@ -27,7 +27,6 @@ export class Yours implements AfterViewInit, OnDestroy {
   @ViewChild('section', { static: true }) sectionRef!: ElementRef<HTMLElement>;
   @ViewChild('pill', { static: true }) pillRef!: ElementRef<HTMLElement>;
   @ViewChild('stickyContainer', { static: true }) stickyContainerRef!: ElementRef<HTMLElement>;
-  @ViewChild('animationWrapper', { static: true }) animationWrapperRef!: ElementRef<HTMLElement>;
 
   private elementRef = inject(ElementRef);
   private ngZone = inject(NgZone);
@@ -36,70 +35,53 @@ export class Yours implements AfterViewInit, OnDestroy {
   readonly pillText = 'Personnalisez-le'.split('');
 
   constructor() {
-    // On garde ton register v0, mais avec un check SSR
     if (typeof window !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
     }
   }
 
   ngAfterViewInit(): void {
-    // On garde ton hack, mais on le rend plus robuste
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
-        // <--- Ton timeout est là, G.
         this.ctx = gsap.context(() => {
           const scroller = this.elementRef.nativeElement.closest('.main-scroll-container');
           if (!scroller) {
-            console.warn('Scroller .main-scroll-container non trouvé.');
+            console.error('Scroller .main-scroll-container non trouvé.');
             return;
           }
 
-          gsap.matchMedia().add(
-            {
-              // On définit nos breakpoints
-              isDesktop: '(min-width: 769px)',
-              isMobile: '(max-width: 768px)',
-            },
-            (context) => {
-              const { isDesktop } = context.conditions as any;
+          this.initPillAnimation(scroller);
 
-              this.initPillAnimation(scroller);
+          gsap.matchMedia().add('(min-width: 769px)', () => {
+            this.initTakeOverAnimation(scroller);
+          });
 
-              if (isDesktop) {
-                this.initTakeOverAnimation(scroller);
-              }
-            }
-          );
-
-          // On rafraîchit une fois que tout est set up
           ScrollTrigger.refresh();
         }, this.sectionRef.nativeElement);
-      }); // <--- On garde tes 100ms
+      }, 50);
     });
   }
 
   ngOnDestroy(): void {
-    // Le .revert() va clean le contexte, y compris le matchMedia. Propre.
     this.ctx?.revert();
   }
 
   private initPillAnimation(scroller: Element): void {
     const pill = this.pillRef.nativeElement;
-    // On garde ta logique v0
     ScrollTrigger.create({
       trigger: pill,
       scroller: scroller,
-      start: 'top 80%',
+      start: 'top 85%',
       once: true,
       onEnter: () => pill.classList.add('is-animated'),
     });
   }
 
   private initTakeOverAnimation(scroller: Element): void {
+    const hostElement = this.sectionRef.nativeElement;
     const stickyContainer = this.stickyContainerRef.nativeElement;
-    const animationWrapper = this.animationWrapperRef.nativeElement;
+    const target = hostElement;
 
-    // On garde ta timeline v0
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: stickyContainer,
@@ -107,41 +89,51 @@ export class Yours implements AfterViewInit, OnDestroy {
         start: 'top top',
         end: 'bottom bottom',
         scrub: 1,
+        invalidateOnRefresh: true,
       },
     });
 
-    // SÉQUENCE 1 : Zoom + Fade Titre
-    tl.to(animationWrapper, {
-      '--mask-scale': 4,
-      '--mask-radius': 0,
-      duration: 0.3,
-    }).to(
-      animationWrapper,
+    tl.to(
+      target,
       {
-        '--title-translate-y': '-50px',
+        '--title-translate-y': '20vh',
+        '--title-opacity': 0,
+        '--title-z-index': 1,
         duration: 0.2,
+        ease: 'power2.in',
       },
-      0.1
+      0
+    ).to(
+      target,
+      {
+        '--viewport-width': '90vw',
+        '--viewport-max-width': '1200px',
+        '--viewport-radius': '24px',
+        '--bg-image-scale': 1,
+        duration: 0.4,
+        ease: 'power2.inOut',
+      },
+      0
     );
 
-    // SÉQUENCE 2 : Révélation UI 1
     tl.to(
-      animationWrapper,
+      target,
       {
         '--curtain-clip': '100%',
-        duration: 0.35,
+        duration: 0.3,
+        ease: 'power2.inOut',
       },
-      0.3
+      '+=0.05'
     );
 
-    // SÉQUENCE 3 : Révélation UI 2
     tl.to(
-      animationWrapper,
+      target,
       {
-        '--second-image-clip': 0,
-        duration: 0.35,
+        '--second-image-clip': '0%',
+        duration: 0.4,
+        ease: 'power2.inOut',
       },
-      0.65
+      '+=0.1'
     );
   }
 }

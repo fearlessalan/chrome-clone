@@ -123,9 +123,10 @@
 }
 
 @include respond-to('tablet') {
-  .updates-header {
-    text-align: left;
-    align-items: flex-start;
+  .updates {
+    padding: 4rem 0;
+    margin: auto;
+    width: 100vw;
   }
 }
 

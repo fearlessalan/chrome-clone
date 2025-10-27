@@ -1,26 +1,38 @@
 @use 'mixins' as *;
 
 :host {
-  --mask-scale: 1;
-  --mask-radius: 16px;
+  --viewport-width: 45vw;
+  --viewport-max-width: 400px;
+  --viewport-height: auto;
+  --viewport-radius: 16px;
   --title-translate-y: 0px;
   --title-opacity: 1;
   --curtain-clip: 0%;
   --second-image-clip: 100%;
+  --title-z-index: 10;
+  --bg-image-scale: 1.2;
 }
 
 .yours-section {
-  padding: 6rem 0;
+  padding-top: 6rem;
   text-align: center;
-  min-height: 100vh;
 }
+
+.title-container {
+  transform: translateY(var(--title-translate-y));
+  opacity: var(--title-opacity);
+  will-change: transform, opacity, z-index;
+  @include container;
+  position: relative;
+  z-index: var(--title-z-index);
+}
+
 .yours-title {
   font-size: var(--font-size-h1);
   font-weight: var(--font-weight-bold);
-  margin-bottom: 3rem;
-  transform: translateY(var(--title-translate-y));
-  opacity: var(--title-opacity);
+  margin: 0;
 }
+
 .pill-wrapper {
   display: inline-block;
   .pill {
@@ -58,35 +70,37 @@
 .take-over-container {
   height: 300vh;
   position: relative;
-  margin: auto;
+  align-items: start;
 }
+
 .take-over-sticky-content {
   position: sticky;
   top: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-.animation-wrapper {
+  height: 90vh;
   width: 100%;
-  height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 4rem;
 }
 
 .animation-mask {
   position: relative;
-  width: 60vw;
-  max-width: 400px;
-  transform: scale(var(--mask-scale));
-  border-radius: var(--mask-radius);
+  width: var(--viewport-width);
+  max-width: var(--viewport-max-width);
+  height: var(--viewport-height);
+  aspect-ratio: 727 / 444;
+  border-radius: var(--viewport-radius);
+
   overflow: hidden;
+  will-change: width, height, border-radius;
+  z-index: 5;
 }
 
 .take-over-image {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -98,10 +112,27 @@
   position: relative;
   display: block;
   background-color: #2e70b3;
-  aspect-ratio: 16 / 10;
-  transform: scale(1.8);
   z-index: 2;
   clip-path: inset(0 0 var(--curtain-clip) 0);
+  // 👇 SCALE INITIAL AJUSTABLE 👇
+  transform: scale(var(--bg-image-scale));
+  will-change: transform;
+}
+
+.first-capture,
+.second-capture {
+  app-skeleton {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: scale(3);
+    ::ng-deep svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+    }
+  }
 }
 
 .first-capture {
@@ -112,32 +143,32 @@
   z-index: 3;
 }
 
-.skeleton-viewport {
-  width: 510px;
-  height: auto;
-  margin: 0 auto;
-  transform: scale(0.6);
-
-  app-skeleton {
-    display: block;
-    width: auto;
-    max-width: 90vw;
-    height: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-}
-
 .timed-accordion-block,
 .keyframe-animation-block {
   margin-top: 8rem;
 }
 
+@include respond-to('tablet') {
+  .first-capture,
+  .second-capture {
+    app-skeleton {
+      transform: scale(2);
+      ::ng-deep svg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+      }
+    }
+  }
+}
 @include respond-to('mobile') {
+  .title-container {
+    display: initial;
+  }
   .take-over-wrapper {
     display: none;
   }
-
   .timed-accordion-block {
     margin-top: 3rem;
   }
