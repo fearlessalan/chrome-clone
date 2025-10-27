@@ -1,7 +1,8 @@
 @use 'mixins' as *;
-
 :host {
   display: block;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 @keyframes fill-progress-vertical {
@@ -12,11 +13,12 @@
     height: 100%;
   }
 }
+
 .accordion-container {
   max-width: var(--container-max-width, 1120px);
   margin: 0 auto;
   padding: 0 var(--container-padding, 20px);
-  width: 100vw;
+  width: 100%;
 }
 
 .accordion-desktop {
@@ -72,11 +74,6 @@
   &.is-active {
     background-color: #f0f2f5;
   }
-  @media (hover: hover) {
-    &:hover:not(.is-active) {
-      background-color: #f7f9fb;
-    }
-  }
 }
 
 .item-progress-bar-vertical {
@@ -119,33 +116,34 @@
 }
 
 .item-content {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.5s ease, opacity 0.4s ease, margin-top 0.5s ease;
-  p {
-    margin: 0;
-    color: var(--color-muted);
-    line-height: 1.6;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+
+  .content-inner {
+    overflow: hidden;
+    p {
+      margin: 0;
+      color: var(--color-muted);
+      line-height: 1.6;
+    }
   }
 }
 .item.is-active .item-content {
-  max-height: 200px;
-  opacity: 1;
+  grid-template-rows: 1fr;
   margin-top: 1rem;
 }
+
 .item-cta {
   display: inline-block;
   margin-top: 1rem;
   font-weight: 500;
   color: var(--color-primary);
 }
-
 .accordion-mobile {
   display: flex;
   flex-direction: column;
   gap: 3rem;
-
   @media (min-width: 769px) {
     display: none;
   }
@@ -156,7 +154,6 @@
   flex-direction: column;
   gap: 1.5rem;
 }
-
 .mobile-visual {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -168,13 +165,13 @@
     object-fit: cover;
   }
 }
-
 .mobile-text {
   text-align: left;
   p {
     margin-top: 0.5rem;
   }
 }
+
 .final-cta {
   display: inline-block;
   margin-top: 2rem;

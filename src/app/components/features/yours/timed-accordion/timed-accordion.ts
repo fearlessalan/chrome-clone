@@ -55,8 +55,7 @@ export class TimedAccordion implements OnDestroy {
 
   readonly activeIndex = signal(0);
   readonly isPaused = signal(false);
-  readonly isMobile = signal(window.matchMedia('(max-width: 600px)').matches);
-
+  readonly isMobile = signal(window.matchMedia('(max-width: 768px)').matches);
   readonly activeId = computed(() => this.items()[this.activeIndex()]?.id || '');
 
   @HostBinding('class.is-paused') get pausedClass() {
@@ -73,7 +72,6 @@ export class TimedAccordion implements OnDestroy {
         this.stopTimer();
         return;
       }
-
       if (this.isPaused()) {
         this.stopTimer();
       } else {
@@ -91,7 +89,7 @@ export class TimedAccordion implements OnDestroy {
       this.intersectionObserver.observe(this.elementRef.nativeElement);
 
       this.resizeObserver = new ResizeObserver(() => {
-        this.ngZone.run(() => this.isMobile.set(window.matchMedia('(max-width: 600px)').matches));
+        this.ngZone.run(() => this.isMobile.set(window.matchMedia('(max-width: 768px)').matches));
       });
       this.resizeObserver.observe(document.body);
     });
@@ -105,7 +103,7 @@ export class TimedAccordion implements OnDestroy {
 
   private startTimer(): void {
     this.stopTimer();
-    this.timer = setInterval(() => this.next(), 5000);
+    this.timer = setInterval(() => this.next(), 7000);
   }
 
   private stopTimer(): void {
@@ -118,7 +116,13 @@ export class TimedAccordion implements OnDestroy {
 
   selectItem(index: number): void {
     if (this.isMobile()) return;
-    this.activeIndex.set(index);
-    this.startTimer();
+
+    if (index === this.activeIndex()) {
+      this.isPaused.update((paused) => !paused);
+    } else {
+      this.activeIndex.set(index);
+      this.isPaused.set(false);
+      this.startTimer();
+    }
   }
 }
