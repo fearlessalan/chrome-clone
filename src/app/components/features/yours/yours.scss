@@ -110,7 +110,8 @@
 .background-image {
   position: relative;
   display: block;
-  background-color: #2e70b3;
+  background: linear-gradient(to right, #2e70b3, #5aa0d8);
+
   z-index: 2;
   clip-path: inset(0 0 var(--curtain-clip) 0);
   transform: scale(var(--bg-image-scale));
