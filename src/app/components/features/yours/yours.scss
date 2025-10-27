@@ -114,7 +114,6 @@
   background-color: #2e70b3;
   z-index: 2;
   clip-path: inset(0 0 var(--curtain-clip) 0);
-  // 👇 SCALE INITIAL AJUSTABLE 👇
   transform: scale(var(--bg-image-scale));
   will-change: transform;
 }
@@ -148,6 +147,10 @@
   margin-top: 8rem;
 }
 
+.yours-title-mobile {
+  display: none;
+}
+
 @include respond-to('tablet') {
   .first-capture,
   .second-capture {
@@ -163,13 +166,11 @@
   }
 }
 @include respond-to('mobile') {
-  .title-container {
-    display: initial;
+  .yours-title-mobile {
+    display: block;
+    margin-bottom: 3rem;
   }
   .take-over-wrapper {
     display: none;
-  }
-  .timed-accordion-block {
-    margin-top: 3rem;
   }
 }

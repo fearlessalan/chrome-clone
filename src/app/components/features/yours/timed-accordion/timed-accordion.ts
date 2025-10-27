@@ -1,7 +1,6 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  AfterViewInit,
   OnDestroy,
   ElementRef,
   NgZone,
@@ -9,10 +8,10 @@ import {
   signal,
   computed,
   effect,
+  HostBinding,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// On définit le type de nos slides pour un code propre
 type AccordionItem = {
   id: string;
   title: string;
@@ -28,11 +27,10 @@ type AccordionItem = {
   styleUrls: ['./timed-accordion.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimedAccordion implements AfterViewInit, OnDestroy {
+export class TimedAccordion implements OnDestroy {
   private elementRef = inject(ElementRef);
   private ngZone = inject(NgZone);
 
-  // --- ÉTAT DU COMPOSANT (SIGNALS) ---
   readonly items = signal<AccordionItem[]>([
     {
       id: 'customize',
@@ -56,53 +54,58 @@ export class TimedAccordion implements AfterViewInit, OnDestroy {
   ]);
 
   readonly activeIndex = signal(0);
-  readonly isPaused = signal(false); // Mis à true au survol
+  readonly isPaused = signal(false);
+  readonly isMobile = signal(window.matchMedia('(max-width: 600px)').matches);
 
-  // Signal calculé pour obtenir l'ID du slide actif
   readonly activeId = computed(() => this.items()[this.activeIndex()]?.id || '');
 
-  private timer: any;
-  private observer?: IntersectionObserver;
-
-  constructor() {
-    // Effet qui redémarre le timer quand on n'est plus en pause
-    effect(() => {
-      if (!this.isPaused()) {
-        this.startTimer();
-      } else {
-        this.stopTimer();
-      }
-    });
+  @HostBinding('class.is-paused') get pausedClass() {
+    return this.isPaused();
   }
 
-  ngAfterViewInit(): void {
-    // L'IntersectionObserver va démarrer/arrêter le carrousel
-    // quand il entre ou sort de l'écran.
-    this.ngZone.runOutsideAngular(() => {
-      this.observer = new IntersectionObserver(
-        ([entry]) => {
-          this.ngZone.run(() => {
-            this.isPaused.set(!entry.isIntersecting);
-          });
-        },
-        { threshold: 0.1 }
-      );
+  private timer: any;
+  private intersectionObserver?: IntersectionObserver;
+  private resizeObserver?: ResizeObserver;
 
-      this.observer.observe(this.elementRef.nativeElement);
+  constructor() {
+    effect(() => {
+      if (this.isMobile()) {
+        this.stopTimer();
+        return;
+      }
+
+      if (this.isPaused()) {
+        this.stopTimer();
+      } else {
+        this.startTimer();
+      }
+    });
+
+    this.ngZone.runOutsideAngular(() => {
+      this.intersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          this.ngZone.run(() => this.isPaused.set(!entry.isIntersecting));
+        },
+        { threshold: 0.2 }
+      );
+      this.intersectionObserver.observe(this.elementRef.nativeElement);
+
+      this.resizeObserver = new ResizeObserver(() => {
+        this.ngZone.run(() => this.isMobile.set(window.matchMedia('(max-width: 600px)').matches));
+      });
+      this.resizeObserver.observe(document.body);
     });
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
-    this.observer?.disconnect();
+    this.intersectionObserver?.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
-  // --- LOGIQUE DU CARROUSEL ---
   private startTimer(): void {
-    this.stopTimer(); // On s'assure qu'il n'y a pas de doublons
-    this.timer = setInterval(() => {
-      this.next();
-    }, 7000); // 7 secondes par slide
+    this.stopTimer();
+    this.timer = setInterval(() => this.next(), 5000);
   }
 
   private stopTimer(): void {
@@ -110,12 +113,12 @@ export class TimedAccordion implements AfterViewInit, OnDestroy {
   }
 
   private next(): void {
-    this.activeIndex.update((currentIndex) => (currentIndex + 1) % this.items().length);
+    this.activeIndex.update((current) => (current + 1) % this.items().length);
   }
 
-  // --- MÉTHODES POUR LE TEMPLATE ---
   selectItem(index: number): void {
+    if (this.isMobile()) return;
     this.activeIndex.set(index);
-    this.isPaused.set(true); // Pause au clic
+    this.startTimer();
   }
 }

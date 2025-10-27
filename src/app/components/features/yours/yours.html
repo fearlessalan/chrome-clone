@@ -1,4 +1,19 @@
 <section id="yours" class="yours-section" #section>
+  <div class="container yours-title-mobile">
+    <h2 class="yours-title">
+      <span class="pill-wrapper is-animated">
+        <span class="pill" aria-hidden="true">
+          @for (char of pillText; track $index) {
+          <span class="pill-char" [style.--animation-delay.ms]="$index * 20">
+            {{ char === ' ' ? '&nbsp;' : char }}
+          </span>
+          }
+        </span>
+      </span>
+      <br />
+      et emportez-le partout
+    </h2>
+  </div>
   <div class="take-over-wrapper">
     <div class="take-over-container" #stickyContainer>
       <div class="take-over-sticky-content">
