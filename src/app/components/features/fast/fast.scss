@@ -1,68 +1,100 @@
+@use 'mixins' as *;
+
 :host {
   display: block;
+  height: 300vh;
 }
 
 .fast-section {
-  // La section doit avoir une hauteur pour que le "pin" de GSAP fonctionne.
-  // On lui donne une hauteur minimale, mais elle sera étirée par le pin.
-  min-height: 100vh;
-  width: 100%;
-  // CRUCIAL : On cache tout ce qui dépasse horizontalement.
-  // C'est ce qui cache les cartes qui attendent à droite.
-  overflow: hidden;
-}
-
-.carousel-container {
-  // Le "viewport" de notre carrousel. Il prend toute la hauteur de la section.
-  width: 100%;
+  position: sticky;
+  top: 0;
   height: 100vh;
+  width: 100%;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  // On utilise un padding qui correspond à la marge de notre grille globale.
-  padding: 0 24px;
-  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.carousel-wrapper {
-  // Le conteneur qui bouge horizontalement.
-  display: flex;
-  // Un gap pour simuler le "grid-gap" de la grille 12 colonnes.
-  gap: 24px;
-  // La position relative est la base pour les animations "x" de GSAP.
-  position: relative;
+.fast-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
-
-.fast-card {
-  flex-shrink: 0; // Empêche les cartes de se compresser.
-  border-radius: 1.5rem;
-  padding: 2rem;
-  box-sizing: border-box;
-  height: 500px; // Hauteur fixe pour les cartes à l'état final.
-
-  // ========================================================================
-  // LA MAGIE EST ICI : CALCUL DE LARGEUR BASÉ SUR UNE GRILLE 12 COLONNES
-  // ========================================================================
-  // On calcule la largeur d'une carte qui prendrait 4 colonnes sur 12.
-  // Formule : ( (LargeurTotale - PaddingTotal - GapsTotaux) / 12 Colonnes ) * 4 ColonnesVoulues + GapsInternes
-  width: calc(((100vw - 48px - 11 * 24px) / 12 * 4) + (3 * 24px));
-  // ========================================================================
-
-  // La carte vedette a un layout interne différent.
-  &.is-feature {
-    display: flex;
-    flex-direction: column;
-    // Sa taille initiale (100vw, 80vh) est définie directement par GSAP dans le .ts
+.fast-title {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+.pill-wrapper {
+  display: inline-block;
+  .pill {
+    display: inline-flex;
+    padding: 0.75rem 1.5rem;
+    background-color: #e6f4ea;
+    border-radius: 99px;
+    color: #137333;
+    overflow: hidden;
+  }
+  .pill-char {
+    display: inline-block;
+    transform: translateY(110%);
+  }
+  &.is-animated .pill-char {
+    animation: charBounceSlideInUp 0.7s cubic-bezier(0.22, 0.9, 0.28, 1) forwards;
+    animation-delay: var(--animation-delay, 0ms);
+  }
+}
+@keyframes charBounceSlideInUp {
+  0% {
+    transform: translateY(110%);
+  }
+  50% {
+    transform: translateY(-10%);
+  }
+  70% {
+    transform: translateY(5%);
+  }
+  100% {
+    transform: translateY(0%);
   }
 }
 
-// --- Contenu des cartes ---
+.carousel-pin-wrapper {
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2rem;
+  padding: 0 var(--container-padding, 20px);
+  width: max-content;
+  will-change: transform;
+}
+
+.fast-card {
+  flex-shrink: 0;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+
+  &.is-feature {
+    width: 60vw;
+    max-width: 800px;
+  }
+  &:not(.is-feature) {
+    width: 35vw;
+    max-width: 450px;
+  }
+}
+
 .feature-card-content {
   display: grid;
-  // Le texte prend l'espace nécessaire, le visuel prend tout le reste.
   grid-template-rows: auto 1fr;
   height: 100%;
   gap: 2rem;
-
   .title {
     font-size: 2rem;
     font-weight: 700;
@@ -95,7 +127,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-
   .title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -112,5 +143,27 @@
       height: 100%;
       display: block;
     }
+  }
+}
+
+@include respond-to('mobile') {
+  :host {
+    height: auto;
+  }
+  .fast-section {
+    position: static;
+    height: auto;
+    padding: 4rem 0;
+  }
+  .carousel-track {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 var(--container-padding, 20px);
+  }
+  .fast-card,
+  .fast-card.is-feature {
+    width: 100%;
+    max-width: none;
+    height: auto;
   }
 }

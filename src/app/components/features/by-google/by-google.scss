@@ -1,6 +1,9 @@
+@use 'mixins' as *;
+
 :host {
   display: block;
-  padding: 8rem 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .container {
@@ -9,26 +12,63 @@
   padding: 0 var(--container-padding, 20px);
 }
 
-.main-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
+.by-google-header {
   text-align: center;
   margin-bottom: 4rem;
-  .highlight {
-    color: #fbbc05; // Jaune Google pour le mot "conçu"
+}
+.by-google-title {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+.pill-wrapper {
+  display: inline-block;
+  .pill {
+    display: inline-flex;
+    padding: 0.75rem 1.5rem;
+    background-color: #fef7e0;
+    border-radius: 99px;
+    color: #b56200;
+    overflow: hidden;
+  }
+  .pill-char {
+    display: inline-block;
+    transform: translateY(110%);
+  }
+  &.is-animated .pill-char {
+    animation: charBounceSlideInUp 0.7s cubic-bezier(0.22, 0.9, 0.28, 1) forwards;
+    animation-delay: var(--animation-delay, 0ms);
+  }
+}
+@keyframes charBounceSlideInUp {
+  0% {
+    transform: translateY(110%);
+  }
+  50% {
+    transform: translateY(-10%);
+  }
+  70% {
+    transform: translateY(5%);
+  }
+  100% {
+    transform: translateY(0%);
   }
 }
 
-// --- Grande Carte IA (statique) ---
 .ai-card {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 2rem;
   align-items: center;
-  background-color: #fef7e0; // Jaune très clair
-  padding: 3rem;
-  border-radius: 1.5rem;
+  background-color: #fef7e0;
+  padding: 2rem;
+  border-radius: 24px;
   margin-bottom: 2rem;
+
+  @media (min-width: 769px) {
+    grid-template-columns: 1fr 1fr;
+    padding: 3rem;
+  }
 
   .ai-eyebrow {
     font-weight: 500;
@@ -54,53 +94,63 @@
   }
 }
 
-// --- Grille des Cartes Interactives (CORRIGÉE pour 2 cartes) ---
 .cards-grid {
   display: grid;
   gap: 1.5rem;
-  // On définit une grille simple avec deux colonnes égales.
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas: 'a b';
+  grid-template-columns: 1fr;
+
+  @media (min-width: 769px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 'a b';
+  }
 }
 
-// --- Mécanisme de Flip 3D ---
 .card-container {
-  perspective: 1200px;
-  min-height: 350px; // Hauteur minimale pour un bon rendu
-  grid-area: var(--grid-area); // Applique la zone de grille (a ou b)
-}
-
-.card-flipper {
   position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-  transform-style: preserve-3d;
-}
-
-// La classe .is-flipped est ajoutée par le TS pour déclencher la rotation
-.card-container.is-flipped .card-flipper {
-  transform: rotateY(180deg);
+  cursor: pointer;
+  border-radius: 24px;
+  min-height: 350px;
+  grid-area: var(--grid-area);
+  overflow: hidden;
 }
 
 .card-face {
   position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden; // Cache la face cachée
-  border-radius: 1.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  backface-visibility: hidden;
+  border-radius: inherit;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.card-front {
+  transform: translateY(0);
+  opacity: 1;
+  z-index: 2;
+}
 .card-back {
-  // La face arrière est pré-retournée
-  transform: rotateY(180deg);
+  transform: translateY(30px);
+  opacity: 0;
+  z-index: 1;
 }
 
-// --- Variantes de couleurs pour les cartes ---
+.card-container.is-flipped {
+  .card-front {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  .card-back {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .variant--yellow {
   background-color: #fef7e0;
   color: #b56200;
@@ -108,10 +158,9 @@
 .variant--white {
   background-color: #ffffff;
   color: #202124;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-soft);
 }
 
-// --- Contenu des cartes ---
 .front-eyebrow {
   font-size: 0.8rem;
   font-weight: 600;
@@ -149,4 +198,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@include respond-to('mobile') {
+  :host {
+    padding: 4rem 0;
+  }
+  .by-google-header {
+    margin-bottom: 2rem;
+  }
 }

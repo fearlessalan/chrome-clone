@@ -34,13 +34,13 @@ type FastCard = {
 })
 export class Fast implements AfterViewInit, OnDestroy {
   @ViewChild('section', { static: true }) sectionRef!: ElementRef<HTMLElement>;
-  @ViewChild('carousel', { static: true }) carouselRef!: ElementRef<HTMLElement>;
-  @ViewChild('carouselWrapper', { static: true }) wrapperRef!: ElementRef<HTMLElement>;
+  @ViewChild('track', { static: true }) trackRef!: ElementRef<HTMLElement>;
+  @ViewChild('pill', { static: true }) pillRef!: ElementRef<HTMLElement>;
 
-  private elementRef = inject(ElementRef);
   private ngZone = inject(NgZone);
   private ctx?: gsap.Context;
 
+  readonly pillText = 'rapide'.split('');
   readonly cards = signal<FastCard[]>([
     {
       id: 'performance',
@@ -71,84 +71,56 @@ export class Fast implements AfterViewInit, OnDestroy {
   ]);
 
   constructor() {
-    gsap.registerPlugin(ScrollTrigger);
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
   }
 
   ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
-      setTimeout(() => {
-        this.ctx = gsap.context(() => {
-          const scroller = this.elementRef.nativeElement.closest('.main-scroll-container');
-          if (!scroller) return;
+      this.ctx = gsap.context(() => {
+        const scroller = this.sectionRef.nativeElement.closest('.main-scroll-container');
+        if (!scroller) return;
 
-          const section = this.sectionRef.nativeElement;
-          const carousel = this.carouselRef.nativeElement;
-          const wrapper = this.wrapperRef.nativeElement;
-          const cards = gsap.utils.toArray<HTMLElement>('.fast-card');
-          const featureCard = cards[0];
-          const normalCards = cards.slice(1);
+        this.initPillAnimation(scroller);
 
-          // --- Fonctions de calcul dynamique (comme dans le code original) ---
-          const getGap = () => parseFloat(getComputedStyle(wrapper).gap) || 24;
-          const calculateGridWidth = (columns: number) => {
-            const gap = getGap();
-            return ((carousel.offsetWidth - 11 * gap) / 12) * columns + (columns - 1) * gap;
-          };
-          const calculateWrapperX = () => {
-            return -(wrapper.scrollWidth - carousel.offsetWidth);
-          };
-
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: section,
-              scroller: scroller,
-              pin: true,
-              scrub: 1,
-              start: 'top top',
-              end: () => `+=${wrapper.scrollWidth}`, // La durée du pin dépend de la largeur totale
-              invalidateOnRefresh: true, // Recalcule tout au resize
-            },
-          });
-
-          // LA VRAIE CHORÉGRAPHIE
-
-          // Acte 1 & 2 : Transformation de la carte vedette et des autres cartes
-          tl.fromTo(
-            featureCard,
-            {
-              width: () => `${calculateGridWidth(12)}px`, // Pleine largeur
-              height: '80vh',
-            },
-            {
-              width: () => `${calculateGridWidth(4)}px`, // Taille normale (4 colonnes sur 12)
-              height: '500px',
-              ease: 'sine.inOut',
-            }
-          )
-            .fromTo(
-              normalCards,
-              {
-                x: () => carousel.offsetWidth, // Commence hors-champ à droite
-              },
-              {
-                x: 0,
-                ease: 'sine.inOut',
-                stagger: 0.05, // Léger décalage pour un effet plus naturel
-              },
-              '<'
-            ) // '<' = en même temps que l'animation précédente
-
-            // Acte 3 : Scroll horizontal du carrousel
-            .to(wrapper, {
-              x: () => calculateWrapperX(),
-              ease: 'none', // Le scroll est linéaire
-            });
-        }, this.sectionRef.nativeElement);
-      }, 100);
+        gsap.matchMedia().add('(min-width: 601px)', () => {
+          this.initHorizontalScroll(scroller);
+        });
+      }, this.sectionRef.nativeElement);
     });
   }
 
   ngOnDestroy(): void {
     this.ctx?.revert();
+  }
+
+  private initPillAnimation(scroller: Element): void {
+    const pill = this.pillRef.nativeElement;
+    ScrollTrigger.create({
+      trigger: pill,
+      scroller: scroller,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => pill.classList.add('is-animated'),
+    });
+  }
+
+  private initHorizontalScroll(scroller: Element): void {
+    const track = this.trackRef.nativeElement;
+    const scrollDistance = track.scrollWidth - window.innerWidth;
+
+    gsap.to(track, {
+      x: -scrollDistance,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: this.sectionRef.nativeElement,
+        scroller: scroller,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
   }
 }

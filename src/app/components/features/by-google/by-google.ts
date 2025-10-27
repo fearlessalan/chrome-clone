@@ -1,20 +1,26 @@
-import { Component, ChangeDetectionStrategy, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  WritableSignal,
+  AfterViewInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+  inject,
+  NgZone,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 
-// Type mis à jour pour inclure un "eyebrow" (le petit titre)
 type GoogleCard = {
   id: string;
   gridArea: string;
   variant: 'yellow' | 'white';
-  front: {
-    eyebrow: string;
-    title: string;
-  };
-  back: {
-    content: string;
-    cta: string;
-  };
+  front: { eyebrow: string; title: string };
+  back: { content: string; cta: string };
 };
 
 @Component({
@@ -25,8 +31,15 @@ type GoogleCard = {
   styleUrls: ['./by-google.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ByGoogle {
-  // --- Données corrigées : seulement 2 cartes ---
+export class ByGoogle implements AfterViewInit, OnDestroy {
+  @ViewChild('section', { static: true }) sectionRef!: ElementRef<HTMLElement>;
+  @ViewChild('pill', { static: true }) pillRef!: ElementRef<HTMLElement>;
+
+  private ngZone = inject(NgZone);
+  private ctx?: gsap.Context;
+
+  readonly pillText = 'conçu'.split('');
+
   readonly cards = signal<GoogleCard[]>([
     {
       id: 'search',
@@ -46,10 +59,7 @@ export class ByGoogle {
       id: 'workspace',
       gridArea: 'b',
       variant: 'white',
-      front: {
-        eyebrow: 'GOOGLE WORKSPACE',
-        title: 'Travaillez, avec ou sans Wi-Fi.',
-      },
+      front: { eyebrow: 'GOOGLE WORKSPACE', title: 'Travaillez, avec ou sans Wi-Fi.' },
       back: {
         content:
           'Utilisez Gmail, Google Docs, Google Slides, Google Sheets, Google Traduction et Google Drive même sans connexion Internet.',
@@ -58,13 +68,37 @@ export class ByGoogle {
     },
   ]);
 
-  // La logique de flip reste la même, elle est déjà parfaite
   readonly flippedStates = new Map<string, WritableSignal<boolean>>();
 
   constructor() {
     this.cards().forEach((card) => {
       this.flippedStates.set(card.id, signal(false));
     });
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.ctx = gsap.context(() => {
+        const scroller = this.sectionRef.nativeElement.closest('.main-scroll-container');
+        if (!scroller) return;
+
+        const pill = this.pillRef.nativeElement;
+        ScrollTrigger.create({
+          trigger: pill,
+          scroller: scroller,
+          start: 'top 85%',
+          once: true,
+          onEnter: () => pill.classList.add('is-animated'),
+        });
+      }, this.sectionRef.nativeElement);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ctx?.revert();
   }
 
   toggleCard(cardId: string): void {
