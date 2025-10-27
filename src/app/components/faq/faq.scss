@@ -1,13 +1,18 @@
+@use 'mixins' as *;
+
 :host {
   display: block;
   background-color: #f8f9fa;
   padding: 8rem 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .container {
-  max-width: 900px; // Un peu plus étroit pour la lisibilité
+  max-width: 900px;
   margin: 0 auto;
   padding: 0 var(--container-padding, 20px);
+  width: 100%;
 }
 
 .faq-title {
@@ -50,15 +55,14 @@
 }
 
 .item-content {
-  // C'est ça qui crée l'animation de dépliage
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.25, 1, 0.5, 1),
-    padding 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
   .content-inner {
-    padding-bottom: 0;
+    overflow: hidden;
     p {
+      padding-bottom: 2rem;
       margin: 0;
       line-height: 1.6;
       color: var(--text-color-muted, #6b7280);
@@ -72,17 +76,21 @@
   }
 }
 
-// --- État Ouvert ---
 .accordion-item.is-open {
   .item-icon {
     transform: rotate(135deg);
   }
 
   .item-content {
-    max-height: 500px; // Assez grand pour n'importe quelle réponse
+    grid-template-rows: 1fr;
+  }
+}
 
-    .content-inner {
-      padding-bottom: 2rem;
-    }
+@include respond-to('mobile') {
+  :host {
+    padding: 4rem 0;
+  }
+  .item-question {
+    font-size: 1.2rem;
   }
 }

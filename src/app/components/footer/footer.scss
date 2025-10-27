@@ -3,13 +3,14 @@
   background-color: #f1f3f4;
   color: #5f6368;
   padding: 4rem 0 2rem 0;
-  font-size: 0.9rem;
+  width: 100%;
 }
 
 .container {
   max-width: var(--container-max-width, 1120px);
   margin: 0 auto;
   padding: 0 var(--container-padding, 20px);
+  width: 100%;
 }
 
 a {
@@ -20,7 +21,6 @@ a {
   }
 }
 
-// --- Partie supérieure ---
 .footer-main {
   padding-bottom: 2rem;
   border-bottom: 1px solid #dadce0;
@@ -56,9 +56,16 @@ a {
 
 .links-grid {
   display: grid;
-  // 5 colonnes sur desktop
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
+
+  @media (min-width: 601px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 901px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 
 .links-column {
@@ -78,17 +85,24 @@ a {
   }
 }
 
-// --- Partie inférieure ---
 .footer-bottom {
   padding-top: 2rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+
+  @media (min-width: 901px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .bottom-left,
 .bottom-right {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1.5rem;
 }
@@ -97,22 +111,4 @@ a {
   font-size: 1.5rem;
   font-weight: 700;
   color: #5f6368;
-}
-
-// --- Responsive ---
-@media (max-width: 900px) {
-  .links-grid {
-    grid-template-columns: repeat(3, 1fr); // 3 colonnes sur tablette
-  }
-}
-
-@media (max-width: 600px) {
-  .links-grid {
-    grid-template-columns: repeat(2, 1fr); // 2 colonnes sur mobile
-  }
-  .footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
-  }
 }
