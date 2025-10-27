@@ -4,7 +4,7 @@
 
 ## 🔗 Live Demo
 
-👉 [Voir le site en ligne sur Vercel](https://chrome-clone-demo.vercel.app) *(remplacer ce lien par ton déploiement réel)*
+👉 [Voir le site en ligne sur Vercel](https://chrome-clone-ecru.vercel.app/)
 
 ---
 
@@ -20,11 +20,11 @@ Le rendu est construit sous **Angular 20+**, avec **GSAP + ScrollTrigger** pour 
 
 ## 🧩 Stack Technique
 
-* **Framework :** Angular 20+ (Standalone Components)
-* **Animations :** GSAP + ScrollTrigger
-* **UI :** Angular Material (Material 3)
-* **Styles :** SCSS avec variables CSS
-* **Langage :** TypeScript
+- **Framework :** Angular 20+ (Standalone Components)
+- **Animations :** GSAP + ScrollTrigger
+- **UI :** Angular Material (Material 3)
+- **Styles :** SCSS avec variables CSS
+- **Langage :** TypeScript
 
 ---
 
@@ -57,29 +57,29 @@ Chaque section (hero, features, etc.) est un **composant standalone** isolé, cl
 
 ### 🌀 Hero section
 
-* Scroll-driven animation contrôlée via GSAP.
-* Timelines synchronisées : zoom, alignement, translation horizontale.
-* Responsive adaptatif : animation complète sur desktop, fallback simplifié sur mobile.
+- Scroll-driven animation contrôlée via GSAP.
+- Timelines synchronisées : zoom, alignement, translation horizontale.
+- Responsive adaptatif : animation complète sur desktop, fallback simplifié sur mobile.
 
 ### 🧭 Features section
 
-* Navigation sticky avec **IntersectionObserver** pour détecter la section active.
-* Sous-composants pour chaque ancre : updates, yours, safe, fast, by-google.
+- Navigation sticky avec **IntersectionObserver** pour détecter la section active.
+- Sous-composants pour chaque ancre : updates, yours, safe, fast, by-google.
 
 ### 🧱 Architecture Angular
 
-* Signals pour la réactivité locale.
-* Mode `OnPush` activé pour performance maximale.
-* `runOutsideAngular()` pour exécuter GSAP sans polluer la détection de changements.
+- Signals pour la réactivité locale.
+- Mode `OnPush` activé pour performance maximale.
+- `runOutsideAngular()` pour exécuter GSAP sans polluer la détection de changements.
 
 ---
 
 ## 🖼️ Placeholders & mentions légales
 
-* Les images utilisées sont **des placeholders** servant uniquement à représenter la mise en page.
-* Aucun logo officiel, image ou ressource Google n'est inclus.
-* Si tu souhaites publier le projet, **remplace les placeholders** par des visuels libres ou tes propres créations.
-* Ce projet n’a **aucune affiliation avec Google**.
+- Les images utilisées sont **des placeholders** servant uniquement à représenter la mise en page.
+- Aucun logo officiel, image ou ressource Google n'est inclus.
+- Si tu souhaites publier le projet, **remplace les placeholders** par des visuels libres ou tes propres créations.
+- Ce projet n’a **aucune affiliation avec Google**.
 
 ---
 
@@ -109,17 +109,16 @@ ng build --configuration production
 
 | Commande        | Description                    |
 | --------------- | ------------------------------ |
-| `ng serve`     | Lance le projet localement     |
+| `ng serve`      | Lance le projet localement     |
 | `npm run build` | Build optimisé pour production |
-
 
 ---
 
 ## ⚙️ Notes techniques
 
-* Les animations ScrollTrigger se synchronisent avec la hauteur du `spacer` (modifiable en SCSS).
-* Breakpoints : mobile ≤ 600px, tablette ≤ 1024px, desktop > 1024px.
-* Accessibilité : balises ARIA, structure sémantique, smooth scroll natif.
+- Les animations ScrollTrigger se synchronisent avec la hauteur du `spacer` (modifiable en SCSS).
+- Breakpoints : mobile ≤ 600px, tablette ≤ 1024px, desktop > 1024px.
+- Accessibilité : balises ARIA, structure sémantique, smooth scroll natif.
 
 ---
 
@@ -145,4 +144,4 @@ Tu peux y ajouter une licence MIT si tu veux l'ouvrir publiquement.
 
 ---
 
-> *Un projet sobre. Sans bruit. Juste du code qui respire la maîtrise.*
+> _Un projet sobre. Sans bruit. Juste du code qui respire la maîtrise._
