@@ -1,51 +1,59 @@
 <section id="safe" class="safe-section">
   <div class="container">
+    <!-- 👇 NOUVEAU TITRE ET PILULE 👇 -->
+    <header class="safe-header">
+      <h2 class="safe-title">
+        Parcourez le Web avec
+        <br />
+        un navigateur
+        <span class="pill-wrapper">
+          <span class="pill">sécurisé</span>
+        </span>
+      </h2>
+    </header>
+
     <div class="cards-grid">
-      <!-- On boucle sur nos données de cartes -->
+      @for (card of cards(); track card.id) {
       <div
-        *ngFor="let card of cards()"
         class="card-container"
         [style.grid-area]="card.gridArea"
         [class.is-flipped]="isFlipped(card.id)"
         (click)="flipCard(card.id)"
       >
-        <div class="card-flipper">
-          <!-- FACE AVANT -->
-          <div class="card-face card-front" [ngClass]="'variant--' + card.variant">
-            <div class="card-content">
-              <h3 class="front-title">{{ card.front.title }}</h3>
-              <div class="front-body">
-                <!-- Logique d'affichage spécifique pour chaque carte -->
-                <ng-container [ngSwitch]="card.id">
-                  <div *ngSwitchCase="'password-manager'" class="password-mock">
-                    <input type="password" value="************" readonly />
-                  </div>
-                  <div *ngSwitchCase="'privacy-guide'" class="guide-mock">
-                    <mat-icon>security</mat-icon>
-                  </div>
-                  <span *ngSwitchDefault>{{ card.front.content }}</span>
-                </ng-container>
+        <!-- On a viré le .card-flipper, plus besoin -->
+        <!-- FACE AVANT -->
+        <div class="card-face card-front" [ngClass]="'variant--' + card.variant">
+          <div class="card-content">
+            <h3 class="front-title">{{ card.front.title }}</h3>
+            <div class="front-body">
+              @switch (card.id) { @case ('password-manager') {
+              <div class="password-mock">
+                <input type="password" value="************" readonly />
               </div>
-              <mat-icon *ngIf="card.front.icon" class="front-icon">{{ card.front.icon }}</mat-icon>
+              } @case ('privacy-guide') {
+              <div class="guide-mock"><mat-icon>security</mat-icon></div>
+              } @default { <span>{{ card.front.content }}</span> } }
             </div>
+            @if (card.front.icon) { <mat-icon class="front-icon">{{ card.front.icon }}</mat-icon> }
           </div>
+        </div>
 
-          <!-- FACE ARRIÈRE -->
-          <div class="card-face card-back" [ngClass]="'variant--' + card.variant">
-            <div class="card-content">
-              <h3 class="back-title">{{ card.back.title }}</h3>
-              <p class="back-description">{{ card.back.content }}</p>
-              <a href="#" class="back-cta" (click)="$event.stopPropagation()">
-                {{ card.back.cta }}
-                <mat-icon>arrow_forward</mat-icon>
-              </a>
-              <button class="close-btn" (click)="flipCard(card.id); $event.stopPropagation()">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
+        <!-- FACE ARRIÈRE -->
+        <div class="card-face card-back" [ngClass]="'variant--' + card.variant">
+          <div class="card-content">
+            <h3 class="back-title">{{ card.back.title }}</h3>
+            <p class="back-description">{{ card.back.content }}</p>
+            <a href="#" class="back-cta" (click)="$event.stopPropagation()">
+              {{ card.back.cta }}
+              <mat-icon>arrow_forward</mat-icon>
+            </a>
+            <button class="close-btn" (click)="flipCard(card.id); $event.stopPropagation()">
+              <mat-icon>close</mat-icon>
+            </button>
           </div>
         </div>
       </div>
+      }
     </div>
   </div>
 </section>

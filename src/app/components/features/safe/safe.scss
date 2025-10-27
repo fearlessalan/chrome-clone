@@ -1,63 +1,94 @@
 :host {
   display: block;
   background-color: #f8f9fa;
-  padding: 8rem 0;
 }
 
-.cards-grid {
-  display: grid;
-  gap: 1.5rem;
-  // On définit notre grille asymétrique
-  grid-template-areas:
-    'password check'
-    'password guide'
-    'browsing guide';
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr auto;
+// --- Header (inchangé) ---
+.safe-header {
+  text-align: center;
+  margin-bottom: 4rem;
 }
-
-.card-container {
-  // La base pour la perspective 3D
-  perspective: 1000px;
-  cursor: pointer;
-
-  // On applique la zone de grille définie dans le TS
-  &[style*='grid-area'] {
-    grid-area: var(--grid-area);
+.safe-title {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+.pill-wrapper {
+  display: inline-block;
+  .pill {
+    display: inline-flex;
+    padding: 0.75rem 1.5rem;
+    background-color: #e8f0fe;
+    border-radius: 99px;
+    color: var(--color-primary);
   }
 }
 
-.card-flipper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-  min-height: 250px; // Hauteur minimale pour l'harmonie
+// --- Grille des cartes (inchangée) ---
+.cards-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 769px) {
+    grid-template-areas: 'password check' 'password guide' 'browsing guide';
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
 }
 
-// Quand le conteneur a la classe .is-flipped, on fait tourner le flipper
-.card-container.is-flipped .card-flipper {
-  transform: rotateY(180deg);
+// ========================================================================
+// 🚀 LA MÉTAMORPHOSE EN SILENCE
+// ========================================================================
+
+.card-container {
+  position: relative;
+  cursor: pointer;
+  border-radius: 1.5rem;
+  min-height: 250px;
+  grid-area: var(--grid-area);
+  // On vire l'overflow: hidden, on n'en a plus besoin
 }
 
 .card-face {
   position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden; // Cache la face qui est derrière
-  border-radius: 1.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  backface-visibility: hidden; // Perf hint
+
+  // 👇 LA TRANSITION : douce, sur l'opacité et un léger mouvement vertical 👇
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+// --- État Initial (Front visible) ---
+.card-front {
+  transform: translateY(0);
+  opacity: 1;
+  z-index: 2; // L'avant est au-dessus
+}
 .card-back {
-  // La face arrière est déjà retournée de 180 degrés au départ
-  transform: rotateY(180deg);
+  transform: translateY(20px); // L'arrière est légèrement décalé vers le bas, prêt à monter
+  opacity: 0;
+  z-index: 1; // L'arrière est en dessous
 }
 
-// --- Variantes de couleurs ---
+// --- État "Flipped" (Back visible) ---
+.card-container.is-flipped {
+  .card-front {
+    transform: translateY(-20px); // L'avant glisse légèrement vers le haut en disparaissant
+    opacity: 0;
+  }
+  .card-back {
+    transform: translateY(0); // L'arrière monte pour prendre sa place
+    opacity: 1;
+  }
+}
+
+// --- Variantes de couleurs (inchangées) ---
 .variant--white {
   background-color: #ffffff;
   color: #202124;
@@ -66,23 +97,17 @@
   background-color: #e8f0fe;
   color: #1967d2;
 }
-.variant--blue {
-  background-color: #d2e3fc;
-  color: #0b57d0;
-}
 .variant--dark-blue {
   background-color: #3c4043;
   color: #ffffff;
 }
 
-// --- Styles du contenu ---
+// --- Styles du contenu (inchangés) ---
 .card-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
-
-// Face avant
 .front-title {
   font-size: 1.75rem;
   font-weight: 700;
@@ -118,8 +143,6 @@
   height: 8rem;
   color: #1967d2;
 }
-
-// Face arrière
 .back-title {
   font-size: 1.25rem;
   font-weight: 700;
