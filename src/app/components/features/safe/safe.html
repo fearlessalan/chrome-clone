@@ -1,13 +1,18 @@
-<section id="safe" class="safe-section">
+<section id="safe" class="safe-section" #section>
   <div class="container">
-    <!-- 👇 NOUVEAU TITRE ET PILULE 👇 -->
     <header class="safe-header">
       <h2 class="safe-title">
         Parcourez le Web avec
         <br />
         un navigateur
-        <span class="pill-wrapper">
-          <span class="pill">sécurisé</span>
+        <span class="pill-wrapper" #pill>
+          <span class="pill">
+            @for (char of pillText; track $index) {
+            <span class="pill-char" [style.--animation-delay.ms]="$index * 20">
+              {{ char === ' ' ? '&nbsp;' : char }}
+            </span>
+            }
+          </span>
         </span>
       </h2>
     </header>
@@ -20,8 +25,6 @@
         [class.is-flipped]="isFlipped(card.id)"
         (click)="flipCard(card.id)"
       >
-        <!-- On a viré le .card-flipper, plus besoin -->
-        <!-- FACE AVANT -->
         <div class="card-face card-front" [ngClass]="'variant--' + card.variant">
           <div class="card-content">
             <h3 class="front-title">{{ card.front.title }}</h3>
@@ -38,7 +41,6 @@
           </div>
         </div>
 
-        <!-- FACE ARRIÈRE -->
         <div class="card-face card-back" [ngClass]="'variant--' + card.variant">
           <div class="card-content">
             <h3 class="back-title">{{ card.back.title }}</h3>

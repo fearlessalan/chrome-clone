@@ -1,26 +1,26 @@
-import { Component, ChangeDetectionStrategy, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  WritableSignal,
+  AfterViewInit,
+  ElementRef,
+  ViewChild,
+  inject,
+  NgZone,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 
-// On définit un type pour nos cartes pour un code plus propre
 type SafeCard = {
   id: string;
-  gridArea: string; // Pour le positionnement dans la grille CSS
+  gridArea: string;
   variant: 'white' | 'light-blue' | 'blue' | 'dark-blue';
-
-  // Contenu de la face AVANT
-  front: {
-    title: string;
-    content: string;
-    icon?: string;
-  };
-
-  // Contenu de la face ARRIÈRE
-  back: {
-    title: string;
-    content: string;
-    cta: string;
-  };
+  front: { title: string; content: string; icon?: string };
+  back: { title: string; content: string; cta: string };
 };
 
 @Component({
@@ -31,10 +31,15 @@ type SafeCard = {
   styleUrls: ['./safe.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Safe {
-  // --- ÉTAT DU COMPOSANT ---
+export class Safe implements AfterViewInit, OnDestroy {
+  @ViewChild('pill', { static: true }) pillRef!: ElementRef<HTMLElement>;
+  @ViewChild('section', { static: true }) sectionRef!: ElementRef<HTMLElement>;
 
-  // On stocke les données de nos cartes dans un signal
+  private ngZone = inject(NgZone);
+  private ctx?: gsap.Context;
+
+  readonly pillText = 'sécurisé'.split('');
+
   readonly cards = signal<SafeCard[]>([
     {
       id: 'password-manager',
@@ -101,27 +106,46 @@ export class Safe {
     },
   ]);
 
-  // On utilise un Map pour stocker l'état "retourné" de chaque carte.
-  // La clé est l'ID de la carte, la valeur est un signal (true/false).
   readonly flippedStates = new Map<string, WritableSignal<boolean>>();
 
   constructor() {
-    // On initialise le Map : pour chaque carte, on crée un signal initialisé à 'false'.
     this.cards().forEach((card) => {
       this.flippedStates.set(card.id, signal(false));
     });
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
   }
 
-  // Méthode appelée au clic sur une carte
+  ngAfterViewInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.ctx = gsap.context(() => {
+        const scroller = this.sectionRef.nativeElement.closest('.main-scroll-container');
+        if (!scroller) return;
+
+        const pill = this.pillRef.nativeElement;
+        ScrollTrigger.create({
+          trigger: pill,
+          scroller: scroller,
+          start: 'top 85%',
+          once: true,
+          onEnter: () => pill.classList.add('is-animated'),
+        });
+      }, this.sectionRef.nativeElement);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ctx?.revert();
+  }
+
   flipCard(cardId: string): void {
     const cardState = this.flippedStates.get(cardId);
     if (cardState) {
-      // On inverse la valeur du signal (true -> false, false -> true)
       cardState.update((value) => !value);
     }
   }
 
-  // Méthode pour vérifier si une carte est retournée (utilisée dans le template)
   isFlipped(cardId: string): boolean {
     return this.flippedStates.get(cardId)?.() || false;
   }
