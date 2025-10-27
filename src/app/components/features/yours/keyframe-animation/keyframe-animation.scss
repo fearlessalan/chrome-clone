@@ -11,9 +11,9 @@
   max-width: var(--container-max-width, 1120px);
   margin: 0 auto;
   padding: 0 var(--container-padding, 20px);
+  width: 100vw;
 }
 
-// --- Contenu Textuel (inchangé) ---
 .text-content {
   .title {
     font-size: 2.5rem;
@@ -39,83 +39,82 @@
 .visual-content {
   position: relative;
   aspect-ratio: 4 / 3;
+  overflow: visible;
 }
 
 .layers-wrapper {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
+  transform-style: preserve-3d;
   width: 100%;
   height: 100%;
-  transform-style: preserve-3d;
 }
 
 .layer {
   position: absolute;
-  will-change: transform;
+  will-change: transform, opacity;
+}
 
-  // ==========================================================
-  //         LA CORRECTION FINALE EST ICI
-  // ==========================================================
+.layer-browser {
+  width: 80%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  app-skeleton {
+    width: 100%;
+    height: 100%;
+  }
+}
 
-  // Le fond est STABLE. On le centre parfaitement et ON N'Y TOUCHE PLUS.
-  &.layer-browser {
-    width: 80%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); // Centrage parfait, position finale.
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  opacity: 0;
+  z-index: 10;
+  mat-icon {
+    font-size: 32px;
   }
+}
 
-  // On positionne les icônes à leur point de DÉPART.
-  // GSAP va ajouter les transformations PAR-DESSUS ces positions.
-  &.icon-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    mat-icon {
-      font-size: 32px;
-    }
+.layer-cart {
+  width: 80px;
+  height: 80px;
+  top: 10%;
+  left: 5%;
+  background-color: #a5b4fc;
+  mat-icon {
+    color: #3730a3;
   }
-
-  &.layer-cart {
-    width: 80px;
-    height: 80px;
-    top: 10%;
-    left: 5%; // Position initiale
-    background-color: #a5b4fc;
-    mat-icon {
-      color: #3730a3;
-    }
+}
+.layer-clipboard {
+  width: 80px;
+  height: 80px;
+  top: 15%;
+  right: -2%;
+  background-color: #f1f5f9;
+  mat-icon {
+    color: #334155;
   }
-  &.layer-clipboard {
-    width: 80px;
-    height: 80px;
-    top: 15%;
-    right: -5%; // Position initiale
-    background-color: #f1f5f9;
-    mat-icon {
-      color: #334155;
-    }
+}
+.layer-calendar {
+  width: 60px;
+  height: 60px;
+  bottom: 5%;
+  right: 10%;
+  background-color: #fca5a5;
+  mat-icon {
+    color: #b91c1c;
   }
-  &.layer-calendar {
-    width: 60px;
-    height: 60px;
-    bottom: 5%;
-    right: 10%; // Position initiale
-    background-color: #fca5a5;
-    mat-icon {
-      color: #b91c1c;
-    }
-  }
-  &.layer-pencil {
-    width: 60px;
-    height: 60px;
-    bottom: 20%;
-    left: -2%; // Position initiale
-    background-color: #86efac;
-    mat-icon {
-      color: #15803d;
-    }
+}
+.layer-pencil {
+  width: 60px;
+  height: 60px;
+  bottom: 20%;
+  left: 0;
+  background-color: #86efac;
+  mat-icon {
+    color: #15803d;
   }
 }
