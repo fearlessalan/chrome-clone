@@ -5,9 +5,9 @@
         La solution
         <span class="pill-wrapper" #pill>
           <span class="pill">
-            @for (char of pillText; track $index) {
-            <span class="pill-char" [style.--animation-delay.ms]="$index * 20">{{ char }}</span>
-            }
+            <ng-container *ngFor="let char of pillText; let i = index">
+              <span class="pill-char" [style.--animation-delay.ms]="i * 20">{{ char }}</span>
+            </ng-container>
           </span>
         </span>
         <br />
@@ -17,40 +17,56 @@
   </div>
 
   <div class="carousel-pin-wrapper" #pinWrapper>
+    <button class="nav-btn nav-left" #navLeft (click)="navScroll(-navDelta())" aria-label="Prev">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button class="nav-btn nav-right" #navRight (click)="navScroll(navDelta())" aria-label="Next">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
     <div class="carousel-track" #track>
-      @for (card of cards(); track card.id; let i = $index) {
-      <div
-        class="fast-card"
-        [class.is-feature]="card.isFeature"
-        [style.background-color]="card.bgColor"
-        [style.color]="card.textColor"
-      >
-        @if (card.isFeature) {
-        <div class="feature-card-content">
-          <div class="text-content">
-            <h3 class="title">{{ card.title }}</h3>
-            <p class="description">{{ card.description }}</p>
-            <a href="#" class="cta">{{ card.cta }} <mat-icon>arrow_forward</mat-icon></a>
-          </div>
-          <div class="visual-content">
-            <svg viewBox="0 0 500 300">
-              <rect width="500" height="300" rx="12" fill="#ffffff" />
-            </svg>
-          </div>
+      <ng-container *ngFor="let card of cards(); trackBy: trackByFn">
+        <div
+          class="fast-card"
+          [class.is-feature]="card.isFeature"
+          [style.background-color]="card.bgColor"
+          [style.color]="card.textColor"
+        >
+          <ng-container *ngIf="card.isFeature; else normalCard">
+            <div class="feature-card-content">
+              <!-- VISUAL LEFT now -->
+              <div class="visual-content">
+                <div class="hero-frame">
+                  <div class="hero-visual" #heroVisual>
+                    <!-- search-ui skeleton — will scale inside the frame -->
+                    <app-skeleton type="search-ui"></app-skeleton>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-content" aria-hidden="false">
+                <h3 class="title">{{ card.title }}</h3>
+                <p class="description">{{ card.description }}</p>
+                <a href="#" class="cta" *ngIf="card.cta"
+                  >{{ card.cta }} <mat-icon>arrow_forward</mat-icon></a
+                >
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #normalCard>
+            <div class="normal-card-content">
+              <h3 class="title">{{ card.title }}</h3>
+              <p class="description">{{ card.description }}</p>
+              <div class="visual-content-normal">
+                <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice">
+                  <rect width="300" height="200" rx="12" fill="#ffffff" />
+                </svg>
+              </div>
+            </div>
+          </ng-template>
         </div>
-        } @else {
-        <div class="normal-card-content">
-          <h3 class="title">{{ card.title }}</h3>
-          <p class="description">{{ card.description }}</p>
-          <div class="visual-content-normal">
-            <svg viewBox="0 0 300 200">
-              <rect width="300" height="200" rx="12" fill="#ffffff" />
-            </svg>
-          </div>
-        </div>
-        }
-      </div>
-      }
+      </ng-container>
     </div>
   </div>
 </section>

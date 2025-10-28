@@ -1,4 +1,4 @@
-@use '../../../styles/mixins' as *;
+@use 'mixins' as *;
 
 :host {
   --primary-color-soft-bg: #e8f0fe;
@@ -88,23 +88,30 @@
 
 @include respond-to('mobile') {
   .app-features-nav {
+    // On garde la position fixe en bas
     top: auto;
     bottom: 1rem;
     position: fixed;
     width: calc(100% - 2rem);
     left: 1rem;
     right: 1rem;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.3s var(--ease-standard);
-    &.is-visible-on-mobile {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
+
+    // 👇 LA CORRECTION EST ICI 👇
+    // On la rend visible par défaut, et on gère la transition
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: transform 0.4s var(--ease-standard), opacity 0.4s var(--ease-standard);
+
+    // La classe .is-hidden, gérée par le TS, la fera disparaître
+    &.is-hidden {
+      transform: translateY(calc(100% + 2rem));
+      opacity: 0;
+      visibility: hidden;
     }
   }
 
+  // Le reste de tes styles mobiles est parfait, on n'y touche pas
   .app-features-nav__list {
     position: absolute;
     bottom: calc(100% + 0.5rem);

@@ -37,67 +37,53 @@ export class Features implements AfterViewInit, OnDestroy {
   isMobileMenuOpen = signal<boolean>(false);
 
   private io?: IntersectionObserver;
-  private navVisibilityObserver?: IntersectionObserver;
   private sections: HTMLElement[] = [];
   private st?: ScrollTrigger;
+  private ctx?: gsap.Context;
 
   constructor(private ngZone: NgZone) {
-    gsap.registerPlugin(ScrollTrigger);
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
     effect(() => {
       this.updateGliderPosition(this.activeAnchor());
     });
   }
 
   ngAfterViewInit(): void {
-    const host = this.rootRef.nativeElement;
-    this.sections = Array.from(host.querySelectorAll<HTMLElement>('section[id]'));
-
     this.ngZone.runOutsideAngular(() => {
-      this.setupIntersectionObserver();
-      this.setupStickyBehavior();
-      this.setupNavVisibilityObserver();
+      const host = this.rootRef.nativeElement;
+      this.ctx = gsap.context(() => {
+        this.sections = Array.from(host.querySelectorAll<HTMLElement>('.feature-section-wrapper'));
+
+        this.setupIntersectionObserver();
+        this.setupStickyBehavior();
+      }, host);
     });
   }
 
   ngOnDestroy(): void {
     this.io?.disconnect();
-    this.navVisibilityObserver?.disconnect();
-    this.st?.kill();
-  }
-
-  private setupNavVisibilityObserver(): void {
-    const scroller = this.rootRef.nativeElement.closest('.main-scroll-container');
-    const nav = this.navContainerRef.nativeElement;
-    const host = this.rootRef.nativeElement;
-
-    this.navVisibilityObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          nav.classList.add('is-visible-on-mobile');
-        } else {
-          nav.classList.remove('is-visible-on-mobile');
-        }
-      },
-      { root: scroller, threshold: 0.01 }
-    );
-
-    this.navVisibilityObserver.observe(host);
+    this.ctx?.revert();
   }
 
   private setupIntersectionObserver(): void {
     const scroller = this.rootRef.nativeElement.closest('.main-scroll-container');
+
     this.io = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visible) {
-          const id = visible.target.getAttribute('id') || '';
-          this.ngZone.run(() => this.activeAnchor.set(id));
-        }
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id') || '';
+            this.ngZone.run(() => this.activeAnchor.set(id));
+          }
+        });
       },
-      { root: scroller, threshold: [0.25, 0.5, 0.75] }
+      {
+        root: scroller,
+        rootMargin: '-50% 0px -50% 0px',
+        threshold: 0,
+      }
     );
     this.sections.forEach((s) => this.io!.observe(s));
   }
@@ -105,16 +91,27 @@ export class Features implements AfterViewInit, OnDestroy {
   private setupStickyBehavior(): void {
     const scroller = this.rootRef.nativeElement.closest('.main-scroll-container');
     const nav = this.navContainerRef.nativeElement;
+
     this.st = ScrollTrigger.create({
       scroller: scroller,
-      trigger: 'app-header',
-      start: 'bottom top',
-      onEnter: () => gsap.to(nav, { top: '2vh', duration: 0.3 }),
-      onLeaveBack: () => gsap.to(nav, { top: '7vh', duration: 0.3 }),
+      trigger: this.rootRef.nativeElement,
+      start: 'top top-=-64px',
+      end: 'bottom bottom',
+      toggleClass: {
+        targets: nav,
+        className: 'is-sticky',
+      },
+      onUpdate: (self) => {
+        if (window.innerWidth <= 600) {
+          nav.classList.toggle('is-hidden', self.direction === 1);
+        }
+      },
     });
   }
 
   private updateGliderPosition(activeId: string): void {
+    if (this.isMobileMenuOpen()) return;
+
     const navList = this.navListRef.nativeElement;
     const activeLink = navList.querySelector(`a[href="#${activeId}"]`) as HTMLElement;
     const glider = this.gliderRef.nativeElement;
