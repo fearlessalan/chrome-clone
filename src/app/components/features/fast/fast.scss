@@ -88,19 +88,18 @@
 // --- Styles des Cartes ---
 .fast-card {
   flex-shrink: 0;
+  border-radius: 1.5rem;
   height: 500px;
   display: flex;
   flex-direction: column;
-  position: relative; // Important pour le positionnement interne
+  position: relative;
   will-change: width, height, padding, border-radius, box-shadow;
 
-  &:not(.is-feature) {
-    width: 35vw;
-    max-width: 450px;
-    padding: 2rem;
-    border-radius: 1.5rem;
-    box-shadow: var(--shadow-soft);
-  }
+  // 👇 TAILLE UNIQUE POUR TOUTES LES CARTES 👇
+  width: 35vw;
+  max-width: 450px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
 }
 
 // La carte "feature" avec son état initial plein écran
@@ -108,9 +107,9 @@
 
 // 👇 LA MODIF EST ICI 👇
 .fast-card.is-feature {
-  // État initial : plus grand que la normale, mais pas plein écran.
+  // État initial "large"
   width: 80vw;
-  max-width: 1000px; // Une limite pour les très grands écrans
+  max-width: 1000px;
   height: 70vh;
   max-height: 600px;
 

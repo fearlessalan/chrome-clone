@@ -112,6 +112,8 @@ export class Fast implements AfterViewInit, OnDestroy {
 
   // Dans fast.ts
 
+  // Dans fast.ts
+
   private initHorizontalScroll(scroller: Element): void {
     const track = this.trackRef.nativeElement;
     const scrollContainer = this.scrollContainerRef.nativeElement;
@@ -132,11 +134,11 @@ export class Fast implements AfterViewInit, OnDestroy {
       },
     });
 
-    // 👇 LA NOUVELLE CHORÉGRAPHIE AVEC fromTo 👇
+    // On anime la carte "feature" pour qu'elle atteigne sa taille finale
     tl.fromTo(
       featureCard,
       {
-        // FROM: L'état initial (défini dans le SCSS)
+        // FROM: État initial "large"
         width: '80vw',
         height: '70vh',
         borderRadius: 0,
@@ -144,8 +146,8 @@ export class Fast implements AfterViewInit, OnDestroy {
         padding: 0,
       },
       {
-        // TO: L'état final
-        width: '60vw',
+        // TO: État final, maintenant identique aux autres cartes
+        width: '35vw', // 👈 LA MODIF EST ICI
         height: '500px',
         borderRadius: '1.5rem',
         boxShadow: 'var(--shadow-soft)',
@@ -155,17 +157,11 @@ export class Fast implements AfterViewInit, OnDestroy {
       },
       0
     )
+      // Le reste de la timeline est parfait, on n'y touche pas
       .fromTo(
         visualContent,
+        { height: '100%', top: '0%', left: '0rem', right: '0rem' },
         {
-          // FROM: L'image remplit tout
-          height: '100%',
-          top: '0%',
-          left: '0rem',
-          right: '0rem',
-        },
-        {
-          // TO: L'image se réduit et se place en bas
           height: '50%',
           top: '50%',
           left: '2rem',
@@ -175,20 +171,7 @@ export class Fast implements AfterViewInit, OnDestroy {
         },
         0
       )
-      .fromTo(
-        textContent,
-        {
-          // FROM: Texte invisible
-          opacity: 0,
-        },
-        {
-          // TO: Texte visible
-          opacity: 1,
-          ease: 'power1.in',
-          duration: 0.1,
-        },
-        0.15
-      )
+      .fromTo(textContent, { opacity: 0 }, { opacity: 1, ease: 'power1.in', duration: 0.1 }, 0.15)
       .to(track, {
         x: -scrollDistance,
         ease: 'none',
