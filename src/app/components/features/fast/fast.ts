@@ -110,10 +110,6 @@ export class Fast implements AfterViewInit, OnDestroy {
     });
   }
 
-  // Dans fast.ts
-
-  // Dans fast.ts
-
   private initHorizontalScroll(scroller: Element): void {
     const track = this.trackRef.nativeElement;
     const scrollContainer = this.scrollContainerRef.nativeElement;
@@ -138,7 +134,6 @@ export class Fast implements AfterViewInit, OnDestroy {
     tl.fromTo(
       featureCard,
       {
-        // FROM: État initial "large"
         width: '80vw',
         height: '70vh',
         borderRadius: 0,
@@ -146,8 +141,7 @@ export class Fast implements AfterViewInit, OnDestroy {
         padding: 0,
       },
       {
-        // TO: État final, maintenant identique aux autres cartes
-        width: '35vw', // 👈 LA MODIF EST ICI
+        width: '35vw',
         height: '500px',
         borderRadius: '1.5rem',
         boxShadow: 'var(--shadow-soft)',
@@ -157,7 +151,6 @@ export class Fast implements AfterViewInit, OnDestroy {
       },
       0
     )
-      // Le reste de la timeline est parfait, on n'y touche pas
       .fromTo(
         visualContent,
         { height: '100%', top: '0%', left: '0rem', right: '0rem' },

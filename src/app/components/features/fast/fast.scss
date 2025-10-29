@@ -1,32 +1,21 @@
 @use 'mixins' as *;
 
-// ========================================================================
-// 🚀 FONDATION ANTI-TREMBLEMENT - AVEC PARALLAXE DE SCALE
-// ========================================================================
 :host {
   display: block;
   position: relative;
-  // La hauteur est gérée par le conteneur interne pour plus de flexibilité
 }
-
-// Le conteneur qui donne la longueur de scroll à l'animation
 .fast-scroll-container {
   height: 300vh;
 }
-
-// Le contenu qui se colle à l'écran grâce au `position: sticky` natif
 .fast-sticky-content {
   position: sticky;
   top: 0;
   height: 100vh;
   width: 100%;
-  overflow: hidden; // Cache le débordement horizontal du carrousel
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-
-// --- Header & Pilule Animée ---
 .fast-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -76,43 +65,32 @@
 }
 .carousel-track {
   display: flex;
-  align-items: center; // On aligne les cartes verticalement
+  align-items: center;
   width: max-content;
   gap: 2rem;
-  // Le padding assure que la première carte est bien centrée au départ
-  padding: 0 calc((100vw - var(--container-max-width, 1120px)) / 2);
-  transform: translateZ(0); // Forcer l'accélération matérielle
+  transform: translateZ(0);
   will-change: transform;
 }
 
-// --- Styles des Cartes ---
 .fast-card {
   flex-shrink: 0;
-  border-radius: 1.5rem;
   height: 500px;
   display: flex;
   flex-direction: column;
   position: relative;
   will-change: width, height, padding, border-radius, box-shadow;
-
-  // 👇 TAILLE UNIQUE POUR TOUTES LES CARTES 👇
   width: 35vw;
   max-width: 450px;
   padding: 2rem;
+  border-radius: 1.5rem;
   box-shadow: var(--shadow-soft);
 }
 
-// La carte "feature" avec son état initial plein écran
-// Dans fast.scss
-
-// 👇 LA MODIF EST ICI 👇
 .fast-card.is-feature {
-  // État initial "large"
   width: 80vw;
   max-width: 1000px;
   height: 70vh;
   max-height: 600px;
-
   padding: 0;
   border-radius: 0;
   box-shadow: none;
@@ -120,21 +98,18 @@
   overflow: hidden;
 }
 
-// Conteneur interne de la carte "feature"
 .feature-card-content {
   position: relative;
-  width: 80%;
+  width: 100%;
   height: 100%;
 }
-
-// Le texte, positionné au-dessus de l'image
 .text-content {
   position: absolute;
   top: 2rem;
   left: 2rem;
   right: 2rem;
   z-index: 2;
-  opacity: 0; // Caché au départ
+  opacity: 0;
   will-change: opacity;
   .title {
     font-size: 2rem;
@@ -154,20 +129,16 @@
     }
   }
 }
-
-// L'image (skeleton), positionnée en dessous
 .visual-content {
   position: absolute;
   inset: 0;
   z-index: 1;
-  will-change: transform, height, top, left, right;
+  will-change: transform;
   app-skeleton {
     width: 100%;
     height: 100%;
   }
 }
-
-// Styles pour les cartes normales
 .normal-card-content {
   display: flex;
   flex-direction: column;
@@ -183,33 +154,31 @@
   .visual-content-normal {
     border-radius: 1rem;
     overflow: hidden;
-    svg {
+    flex-grow: 1;
+    app-skeleton {
       width: 100%;
-      height: 100%;
-      display: block;
+      height: auto;
     }
   }
 }
 
-// --- Responsive Mobile ---
 @include respond-to('mobile') {
   .fast-scroll-container {
-    height: auto; // Pas de hauteur fixe sur mobile
+    height: auto;
   }
   .fast-sticky-content {
-    position: static; // Pas de sticky
+    position: static;
     height: auto;
     padding: 4rem 0;
   }
   .carousel-track {
-    flex-direction: column; // Les cartes s'empilent
+    flex-direction: column;
     width: 100%;
     padding: 0 var(--container-padding, 20px);
-    transform: none; // On annule le transform
+    transform: none;
   }
   .fast-card,
   .fast-card.is-feature {
-    // On force les styles finaux pour toutes les cartes
     width: 100% !important;
     height: auto !important;
     max-width: none;
@@ -217,6 +186,9 @@
     border-radius: 1.5rem !important;
     box-shadow: var(--shadow-soft) !important;
     background-color: #e6f4ea !important;
+    &.is-feature {
+      order: -1;
+    }
 
     .feature-card-content {
       position: static;
@@ -230,7 +202,7 @@
     }
     .visual-content {
       position: static;
-      aspect-ratio: 5 / 3; // On donne un ratio à l'image
+      aspect-ratio: 5 / 3;
     }
   }
 }

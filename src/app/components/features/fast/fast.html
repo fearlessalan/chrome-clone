@@ -1,8 +1,5 @@
-<!-- On vire l'ID d'ici, il sera sur le wrapper -->
 <section class="fast-section-wrapper">
-  <!-- Le conteneur qui donne la "longueur de scroll" à l'animation -->
   <div class="fast-scroll-container" #scrollContainer>
-    <!-- Le contenu qui va se coller à l'écran -->
     <div id="fast" class="fast-sticky-content" #section>
       <div class="container">
         <header class="fast-header">
@@ -23,7 +20,7 @@
 
       <div class="carousel-wrapper">
         <div class="carousel-track" #track>
-          @for (card of cards(); track card.id) {
+          @for (card of cards(); track card.id; let i = $index) {
           <div
             class="fast-card"
             [class.is-feature]="card.isFeature"
@@ -46,9 +43,11 @@
               <h3 class="title">{{ card.title }}</h3>
               <p class="description">{{ card.description }}</p>
               <div class="visual-content-normal">
-                <svg viewBox="0 0 300 200">
-                  <rect width="300" height="200" rx="12" fill="#ffffff" />
-                </svg>
+                @if (i === 1) {
+                <app-skeleton type="dark-mode-ui"></app-skeleton>
+                } @else {
+                <app-skeleton type="search-ui"></app-skeleton>
+                }
               </div>
             </div>
             }
