@@ -110,25 +110,89 @@ export class Fast implements AfterViewInit, OnDestroy {
     });
   }
 
+  // Dans fast.ts
+
   private initHorizontalScroll(scroller: Element): void {
     const track = this.trackRef.nativeElement;
     const scrollContainer = this.scrollContainerRef.nativeElement;
+    const featureCard = track.querySelector('.fast-card.is-feature') as HTMLElement;
+    const visualContent = featureCard.querySelector('.visual-content') as HTMLElement;
+    const textContent = featureCard.querySelector('.text-content') as HTMLElement;
 
-    // La distance de scroll est la largeur totale du track moins la largeur de la fenêtre
     const scrollDistance = track.scrollWidth - window.innerWidth;
 
-    gsap.to(track, {
-      x: -scrollDistance,
-      ease: 'none',
+    const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: scrollContainer, // Le trigger est le grand conteneur de 300vh
+        trigger: scrollContainer,
         scroller: scroller,
         start: 'top top',
         end: 'bottom bottom',
         scrub: 1,
-        // 👇 PLUS DE PIN: TRUE. C'est le CSS qui gère le pin avec 'sticky'. 👇
         invalidateOnRefresh: true,
       },
     });
+
+    // 👇 LA NOUVELLE CHORÉGRAPHIE AVEC fromTo 👇
+    tl.fromTo(
+      featureCard,
+      {
+        // FROM: L'état initial (défini dans le SCSS)
+        width: '80vw',
+        height: '70vh',
+        borderRadius: 0,
+        boxShadow: 'none',
+        padding: 0,
+      },
+      {
+        // TO: L'état final
+        width: '60vw',
+        height: '500px',
+        borderRadius: '1.5rem',
+        boxShadow: 'var(--shadow-soft)',
+        padding: '2rem',
+        ease: 'power1.inOut',
+        duration: 0.3,
+      },
+      0
+    )
+      .fromTo(
+        visualContent,
+        {
+          // FROM: L'image remplit tout
+          height: '100%',
+          top: '0%',
+          left: '0rem',
+          right: '0rem',
+        },
+        {
+          // TO: L'image se réduit et se place en bas
+          height: '50%',
+          top: '50%',
+          left: '2rem',
+          right: '2rem',
+          ease: 'power1.inOut',
+          duration: 0.3,
+        },
+        0
+      )
+      .fromTo(
+        textContent,
+        {
+          // FROM: Texte invisible
+          opacity: 0,
+        },
+        {
+          // TO: Texte visible
+          opacity: 1,
+          ease: 'power1.in',
+          duration: 0.1,
+        },
+        0.15
+      )
+      .to(track, {
+        x: -scrollDistance,
+        ease: 'none',
+        duration: 0.7,
+      });
   }
 }

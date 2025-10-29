@@ -1,31 +1,32 @@
 @use 'mixins' as *;
 
 // ========================================================================
-// 🚀 LA FONDATION DÉFINITIVE ANTI-TREMBLEMENT
+// 🚀 FONDATION ANTI-TREMBLEMENT - AVEC PARALLAXE DE SCALE
 // ========================================================================
 :host {
   display: block;
   position: relative;
+  // La hauteur est gérée par le conteneur interne pour plus de flexibilité
 }
 
-// Le conteneur qui donne la longueur de scroll
+// Le conteneur qui donne la longueur de scroll à l'animation
 .fast-scroll-container {
-  height: 300vh; // Assez d'espace pour que l'animation se déroule
+  height: 300vh;
 }
 
-// Le contenu qui se colle à l'écran
+// Le contenu qui se colle à l'écran grâce au `position: sticky` natif
 .fast-sticky-content {
   position: sticky;
   top: 0;
   height: 100vh;
   width: 100%;
-  overflow: hidden;
+  overflow: hidden; // Cache le débordement horizontal du carrousel
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-// --- Header & Pilule (inchangés) ---
+// --- Header & Pilule Animée ---
 .fast-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -75,37 +76,67 @@
 }
 .carousel-track {
   display: flex;
+  align-items: center; // On aligne les cartes verticalement
   width: max-content;
   gap: 2rem;
+  // Le padding assure que la première carte est bien centrée au départ
   padding: 0 calc((100vw - var(--container-max-width, 1120px)) / 2);
   transform: translateZ(0); // Forcer l'accélération matérielle
   will-change: transform;
 }
 
+// --- Styles des Cartes ---
 .fast-card {
   flex-shrink: 0;
-  border-radius: 1.5rem;
-  padding: 2rem;
   height: 500px;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow-soft);
-  &.is-feature {
-    width: 60vw;
-    max-width: 800px;
-  }
+  position: relative; // Important pour le positionnement interne
+  will-change: width, height, padding, border-radius, box-shadow;
+
   &:not(.is-feature) {
     width: 35vw;
     max-width: 450px;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-soft);
   }
 }
 
-// --- Styles internes des cartes (inchangés) ---
+// La carte "feature" avec son état initial plein écran
+// Dans fast.scss
+
+// 👇 LA MODIF EST ICI 👇
+.fast-card.is-feature {
+  // État initial : plus grand que la normale, mais pas plein écran.
+  width: 80vw;
+  max-width: 1000px; // Une limite pour les très grands écrans
+  height: 70vh;
+  max-height: 600px;
+
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: #e6f4ea;
+  overflow: hidden;
+}
+
+// Conteneur interne de la carte "feature"
 .feature-card-content {
-  display: grid;
-  grid-template-rows: auto 1fr;
+  position: relative;
+  width: 80%;
   height: 100%;
-  gap: 2rem;
+}
+
+// Le texte, positionné au-dessus de l'image
+.text-content {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  right: 2rem;
+  z-index: 2;
+  opacity: 0; // Caché au départ
+  will-change: opacity;
   .title {
     font-size: 2rem;
     font-weight: 700;
@@ -123,15 +154,21 @@
       margin-left: 0.5rem;
     }
   }
-  .visual-content {
-    border-radius: 1rem;
-    overflow: hidden;
-    app-skeleton {
-      width: 100%;
-      height: 100%;
-    }
+}
+
+// L'image (skeleton), positionnée en dessous
+.visual-content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform, height, top, left, right;
+  app-skeleton {
+    width: 100%;
+    height: 100%;
   }
 }
+
+// Styles pour les cartes normales
 .normal-card-content {
   display: flex;
   flex-direction: column;
@@ -158,23 +195,43 @@
 // --- Responsive Mobile ---
 @include respond-to('mobile') {
   .fast-scroll-container {
-    height: auto; // On annule la hauteur sur mobile
+    height: auto; // Pas de hauteur fixe sur mobile
   }
   .fast-sticky-content {
-    position: static; // On annule le sticky
+    position: static; // Pas de sticky
     height: auto;
     padding: 4rem 0;
   }
   .carousel-track {
-    flex-direction: column;
+    flex-direction: column; // Les cartes s'empilent
     width: 100%;
     padding: 0 var(--container-padding, 20px);
-    transform: none;
+    transform: none; // On annule le transform
   }
   .fast-card,
   .fast-card.is-feature {
-    width: 100%;
+    // On force les styles finaux pour toutes les cartes
+    width: 100% !important;
+    height: auto !important;
     max-width: none;
-    height: auto;
+    padding: 2rem !important;
+    border-radius: 1.5rem !important;
+    box-shadow: var(--shadow-soft) !important;
+    background-color: #e6f4ea !important;
+
+    .feature-card-content {
+      position: static;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .text-content {
+      position: static;
+      opacity: 1;
+    }
+    .visual-content {
+      position: static;
+      aspect-ratio: 5 / 3; // On donne un ratio à l'image
+    }
   }
 }
