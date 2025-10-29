@@ -201,10 +201,13 @@
 }
 
 @include respond-to('mobile') {
-  :host {
-    padding: 4rem 0;
-  }
   .by-google-header {
     margin-bottom: 2rem;
+  }
+  .cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: auto;
   }
 }

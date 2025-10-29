@@ -17,8 +17,7 @@ type FaqItem = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Faq {
-  // --- L'état : quel item est ouvert ? (null = aucun) ---
-  readonly openIndex = signal<number | null>(2); // On ouvre le 3ème par défaut comme sur l'image
+  readonly openIndex = signal<number | null>(null);
 
   // --- Les données de la FAQ ---
   readonly faqItems = signal<FaqItem[]>([
